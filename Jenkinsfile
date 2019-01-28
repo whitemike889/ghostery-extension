@@ -26,6 +26,9 @@ node('docker') {
             stage('Build Extension') {
                 sh 'rm -rf build'
                 withGithubCredentials {
+					// TODO: this should not be packaged at all
+					sh "rm -rf ./benchmarks/*.jl"
+
                     sh "moab makezip ${buildType}"
                 }
             }
