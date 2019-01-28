@@ -18,7 +18,8 @@ node('docker') {
     stage('Build Docker Image') {
         img = docker.build('ghostery/build', '--build-arg UID=`id -u` --build-arg GID=`id -g` .')
         // clean workdir
-        sh 'rm -rf build ghostery-*'
+        sh 'rm -rf build ghostery-* cliqz'
+		sh 'npm run postinstall'
     }
 
     img.inside() {
@@ -27,7 +28,7 @@ node('docker') {
                 sh 'rm -rf build'
                 withGithubCredentials {
 					// TODO: this should not be packaged at all
-					sh "rm -rf ./benchmarks/*.jl"
+					sh "rm -rf ./benchmarks/data ./benchmarks/*.jl"
 
                     sh "moab makezip ${buildType}"
                 }
