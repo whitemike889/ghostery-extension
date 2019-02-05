@@ -37,12 +37,12 @@ node('docker') {
                 }
 			}
             stage('Benchmark') {
-                sh 'cp /home/jenkins/benchmarks/session.jl ./benchmarks/'
-                sh 'cd ./benchmarks && node run_benchmarks.js | tee results.txt'
-                def cputime = sh(returnStdout: true, script: 'cat ./benchmarks/results.txt | grep -v \'=\' | jq .cputime | awk \'{ sum+=$1 } END { print sum }\'')
-                def memory = sh(returnStdout: true, script: 'cat ./benchmarks/results.txt | grep -v \'=\' | jq .memory | awk \'{ sum+=$1 } END { print sum }\'')
-                currentBuild.description = "CPU Time: ${cputime}, Memory: ${((memory as Integer) / (5 * 1024 * 1024)) as Integer}MB"
-                sh 'du -hs ./benchmarks/data/idb/*'
+                // sh 'cp /home/jenkins/benchmarks/session.jl ./benchmarks/'
+                // sh 'cd ./benchmarks && node run_benchmarks.js | tee results.txt'
+                // def cputime = sh(returnStdout: true, script: 'cat ./benchmarks/results.txt | grep -v \'=\' | jq .cputime | awk \'{ sum+=$1 } END { print sum }\'')
+                // def memory = sh(returnStdout: true, script: 'cat ./benchmarks/results.txt | grep -v \'=\' | jq .memory | awk \'{ sum+=$1 } END { print sum }\'')
+                // currentBuild.description = "CPU Time: ${cputime}, Memory: ${((memory as Integer) / (5 * 1024 * 1024)) as Integer}MB"
+                // sh 'du -hs ./benchmarks/data/idb/*'
             }
         }
     }
