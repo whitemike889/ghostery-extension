@@ -53,7 +53,7 @@ node('docker') {
             def artifact = sh(returnStdout: true, script: 'ls build/ | grep firefox').trim()
 
             // build
-            def uploadPath = "cdncliqz/update/android_browser_pre/firefox@ghostery.com"
+            def uploadPath = "cdncliqz/update/${BRANCH_NAME}_pre/firefox@ghostery.com"
             def uploadLocation = "s3://${uploadPath}"
             //currentBuild.description = uploadLocation
             sh "aws s3 cp build/${artifact} ${uploadLocation}/  --acl public-read"
@@ -64,7 +64,7 @@ node('docker') {
                 string(name: 'XPI_URL', value: artifactUrl),
                 string(name: 'XPI_SIGN_CREDENTIALS', value: '41572f9c-06aa-46f0-9c3b-b7f4f78e9caa'),
                 string(name: 'XPI_SIGN_REPO_URL', value: 'git@github.com:cliqz/xpi-sign.git'),
-                string(name: 'CHANNEL', value: 'android_browser')
+                string(name: 'CHANNEL', value: BRANCH_NAME)
             ]
         }
     }
