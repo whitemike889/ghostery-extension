@@ -58,12 +58,12 @@
 				"script": "cliqz/webextension-specific/experimental-apis/cliqz/api.bundle.js"
 			}
 		},
-		"cliqzSynchronus": {
-			"schema": "cliqz/webextension-specific/experimental-apis/cliqzSynchronus/schema.json",
+		"cliqzSynchronous": {
+			"schema": "cliqz/webextension-specific/experimental-apis/cliqzSynchronous/schema.json",
 			"child": {
 				"scopes": ["addon_child"],
-				"paths": [["cliqzSynchronus"]],
-				"script": "cliqz/webextension-specific/experimental-apis/cliqzSynchronus/api.bundle.js"
+				"paths": [["cliqzSynchronous"]],
+				"script": "cliqz/webextension-specific/experimental-apis/cliqzSynchronous/api.bundle.js"
 			}
 		}
 	},
