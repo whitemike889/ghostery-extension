@@ -1096,10 +1096,10 @@ function initialiseWebRequestPipeline() {
  * @return {boolean}
  */
 function isWhitelisted(state) {
-	if (!state.sourceUrl) {
+	if (!state.tabUrl) {
 		return true;
 	}
-	const { hostname } = state.sourceUrlParts.host;
+	const { hostname } = state.tabUrlParts.host;
 	return globals.SESSION.paused_blocking || state.ghosteryWhitelisted || events.policy.whitelisted(hostname);
 }
 
