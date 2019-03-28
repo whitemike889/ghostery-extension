@@ -9,8 +9,8 @@
 	"author": "Ghostery",
 	"name": "__MSG_name__",
 	"short_name": "Ghostery",
-	"version": "8.2.19",
-	"version_name": "8.2.19",
+	"version": "8.2.20",
+	"version_name": "8.2.20",
 	"default_locale": "en",
 	"description": "__MSG_short_description__",
 	"icons": {
