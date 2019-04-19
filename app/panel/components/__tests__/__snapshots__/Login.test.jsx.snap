@@ -1,0 +1,283 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`app/panel/components/Login Component Snapshot test with react-test-renderer Testing login page is rendering 1`] = `
+<div
+  id="signin-panel"
+>
+  <div
+    className="row align-center"
+  >
+    <div
+      className="small-11 medium-8 columns"
+    >
+      <form
+        onSubmit={[Function]}
+      >
+        <div
+          className=""
+          id="login-email"
+        >
+          <label
+            htmlFor="login-input-email"
+          >
+            email_field_label
+            <span
+              className="asterisk"
+            >
+              *
+            </span>
+            <input
+              autoComplete="off"
+              id="login-input-email"
+              name="email"
+              onChange={[Function]}
+              pattern=".{1,}"
+              type="text"
+              value=""
+            />
+          </label>
+          <p
+            className="warning"
+          >
+            invalid_email_login
+          </p>
+        </div>
+        <div
+          className=""
+          id="login-password"
+        >
+          <label
+            htmlFor="login-input-password"
+          >
+            password_field_label
+            <span
+              className="asterisk"
+            >
+              *
+            </span>
+            <input
+              id="login-input-password"
+              name="password"
+              onChange={[Function]}
+              pattern=".{1,}"
+              type="password"
+              value=""
+            />
+          </label>
+          <p
+            className="warning"
+          >
+            password_field_label_required
+          </p>
+        </div>
+        <div
+          className="account-signin-buttons-container row"
+        >
+          <div
+            className="small-6 columns text-center"
+          >
+            <a
+              className="cancel button hollow"
+              href="/"
+              onClick={[Function]}
+            >
+              button_cancel
+            </a>
+          </div>
+          <div
+            className="small-6 columns text-center"
+          >
+            <button
+              className="button ghostery-button"
+              id="signin-button"
+              type="submit"
+            >
+              <span
+                className="title"
+              >
+                panel_menu_signin
+              </span>
+              <span
+                className="loader"
+              />
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div
+    className="account-panel-action row align-center"
+  >
+    <div
+      className="small-11 medium-8 columns"
+    >
+      <div
+        className="row"
+      >
+        <div
+          className="small-6 columns text-center"
+        >
+          <a
+            href="/forgot-password"
+            onClick={[Function]}
+          >
+            panel_forgot_password
+          </a>
+        </div>
+        <div
+          className="small-6 columns text-center"
+        >
+          <a
+            href="/create-account"
+            onClick={[Function]}
+          >
+            panel_create_account
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`app/panel/components/Login Component Snapshot test with react-test-renderer Testing login page is rendering with true values 1`] = `
+<div
+  id="signin-panel"
+>
+  <div
+    className="row align-center"
+  >
+    <div
+      className="small-11 medium-8 columns"
+    >
+      <form
+        onSubmit={[Function]}
+      >
+        <div
+          className=""
+          id="login-email"
+        >
+          <label
+            htmlFor="login-input-email"
+          >
+            email_field_label
+            <span
+              className="asterisk"
+            >
+              *
+            </span>
+            <input
+              autoComplete="off"
+              id="login-input-email"
+              name="email"
+              onChange={[Function]}
+              pattern=".{1,}"
+              type="text"
+              value=""
+            />
+          </label>
+          <p
+            className="warning"
+          >
+            invalid_email_login
+          </p>
+        </div>
+        <div
+          className=""
+          id="login-password"
+        >
+          <label
+            htmlFor="login-input-password"
+          >
+            password_field_label
+            <span
+              className="asterisk"
+            >
+              *
+            </span>
+            <input
+              id="login-input-password"
+              name="password"
+              onChange={[Function]}
+              pattern=".{1,}"
+              type="password"
+              value=""
+            />
+          </label>
+          <p
+            className="warning"
+          >
+            password_field_label_required
+          </p>
+        </div>
+        <div
+          className="account-signin-buttons-container row"
+        >
+          <div
+            className="small-6 columns text-center"
+          >
+            <a
+              className="cancel button hollow"
+              href="/"
+              onClick={[Function]}
+            >
+              button_cancel
+            </a>
+          </div>
+          <div
+            className="small-6 columns text-center"
+          >
+            <button
+              className="button ghostery-button"
+              id="signin-button"
+              type="submit"
+            >
+              <span
+                className="title"
+              >
+                panel_menu_signin
+              </span>
+              <span
+                className="loader"
+              />
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div
+    className="account-panel-action row align-center"
+  >
+    <div
+      className="small-11 medium-8 columns"
+    >
+      <div
+        className="row"
+      >
+        <div
+          className="small-6 columns text-center"
+        >
+          <a
+            href="/forgot-password"
+            onClick={[Function]}
+          >
+            panel_forgot_password
+          </a>
+        </div>
+        <div
+          className="small-6 columns text-center"
+        >
+          <a
+            href="/create-account"
+            onClick={[Function]}
+          >
+            panel_create_account
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
