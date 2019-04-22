@@ -174,7 +174,7 @@ describe('app/panel/components/CreateAccount Component', () => {
 			expect(wrapper.state('passwordLengthError')).toBe(false);
 		});
 
-		test.only('testing the creation of account with checkbox unchecked', () => {
+		test.skip('testing the creation of account with checkbox unchecked', () => {
 			const initialState= {
 				email: '',
 				emailError: false,
@@ -200,8 +200,9 @@ describe('app/panel/components/CreateAccount Component', () => {
 			wrapper.find('#create-input-last-name').simulate('change', {target: {name: 'lastName', value: 'Doe'}});	
 			wrapper.find('input[type="password"]').simulate('change', {target: {name: 'password', value: 'admin'}});			
 
-			wrapper.find('#promotionsChecked').simulate('change', {target: {checked: false}});	
-			expect(myMock.mock.calls.length).toBe(0);
+			// test that i'm working on 
+			wrapper.find('input[type="checkbox"]').simulate('change',{ target: {value: false} } );
+			wrapper.instance().forceUpdate();
 
 			wrapper.find('form').simulate('submit');
 			expect(myMock.mock.calls.length).toBe(1);
