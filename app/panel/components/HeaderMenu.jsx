@@ -19,8 +19,8 @@ import ClassNames from 'classnames';
 
 import ClickOutside from './BuildingBlocks/ClickOutside';
 import { sendMessage, sendMessageInPromise } from '../utils/msg';
-import globals from '../../../../src/classes/Globals';
-import { log } from '../../../../src/utils/common';
+import globals from '../../../src/classes/Globals';
+import { log } from '../../../src/utils/common';
 /**
  * @class Implement drop-down menu invoked from kebab
  * menu icon on the panel header.
