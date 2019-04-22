@@ -1,9 +1,10 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import ClassNames from 'classnames';
 import RSVP from 'rsvp';
+
 
 import { validateEmail, validateConfirmEmail, validatePassword } from '../../utils/utils';
 import CreateAccount from '../CreateAccount';
@@ -136,7 +137,7 @@ describe('app/panel/components/CreateAccount Component', () => {
 			expect(wrapper.state('password')).toEqual(password);
 		});
 
-		test('Creation of account with correct data', () => {
+		test('testing the creation of an account with correct data', () => {
 			const initialState= {
 				email: '',
 				emailError: false,
@@ -174,7 +175,7 @@ describe('app/panel/components/CreateAccount Component', () => {
 			expect(wrapper.state('passwordLengthError')).toBe(false);
 		});
 
-		test.skip('testing the creation of account with checkbox unchecked', () => {
+		test('testing the creation of account with checkbox unchecked', () => {
 			const initialState= {
 				email: '',
 				emailError: false,
@@ -200,9 +201,8 @@ describe('app/panel/components/CreateAccount Component', () => {
 			wrapper.find('#create-input-last-name').simulate('change', {target: {name: 'lastName', value: 'Doe'}});	
 			wrapper.find('input[type="password"]').simulate('change', {target: {name: 'password', value: 'admin'}});			
 
-			// test that i'm working on 
-			wrapper.find('input[type="checkbox"]').simulate('change',{ target: {value: false} } );
-			wrapper.instance().forceUpdate();
+			wrapper.find('#promotionsChecked').simulate('change',{ target: {name: 'promotionsChecked', checked: false} } );
+			expect(myMock.mock.calls.length).toBe(0);	
 
 			wrapper.find('form').simulate('submit');
 			expect(myMock.mock.calls.length).toBe(1);
