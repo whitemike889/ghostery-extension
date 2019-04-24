@@ -124,26 +124,22 @@ describe('app/panel/actions/PanelActions.js', () => {
 
 	});
 
-	// should resolve data
+	test('getTheme action should resolve with no theme set', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
 
-	// test.only('getTheme action should resolve', () => {
-	// 	const initialState = {};
-	// 	const store = mockStore(initialState);
+		const data = { test: 'test-theme' };
+		const expectedPayload = { type: CLEAR_THEME };
 
-	// 	const data = { test: 'test-theme' };
-	// 	const expectedPayload = { data, type: SET_THEME };
+		msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
+			resolve();
+		}));
 
-	// 	msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
-	// 		resolve();
-	// 		}
-	// 	}));
+		return store.dispatch(panelActions.getTheme(data)).then(() => {
+			const actions = store.getActions();
+			expect(actions).toEqual([expectedPayload]);
+		});
 
-	// 	// maybe it is failing bc you would need to be a subscribed user in order to change the theme
-	// 	return store.dispatch(panelActions.getTheme(data)).then(() => {
-	// 		const actions = store.getActions();
-	// 		expect(actions).toEqual([expectedPayload]);
-	// 	});
-
-	// });
+	});
 
 });
