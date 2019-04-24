@@ -43,5 +43,33 @@ describe('app/panel/actions/BlockingActions.js', () => {
 	});
 
 
+	test('updateBlockAllTrackers should resolve', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+
+		const data = {
+			test: 'test-data'
+		}
+		const expectedPayload = { data, type: UPDATE_BLOCK_ALL_TRACKERS};
+		store.dispatch(blockingActions.updateBlockAllTrackers(data));
+
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
+
+	test('updateCategoryBlocked should resolve', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+
+		const data = {
+			test: 'test-data'
+		}
+		const expectedPayload = { data, type: UPDATE_CATEGORY_BLOCKED};
+		store.dispatch(blockingActions.updateCategoryBlocked(data));
+
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
+
 
 });
