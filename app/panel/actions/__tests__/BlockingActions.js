@@ -57,13 +57,28 @@ describe('app/panel/actions/BlockingActions.js', () => {
 		expect(actions).toEqual([expectedPayload]);
 	});
 
+	test('updateCategories should resolve', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+
+		const data = {
+			test: 'test-data'
+		};
+		const expectedPayload = { data, type: UPDATE_CATEGORIES };
+		store.dispatch(blockingActions.updateCategories(data));
+
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
+
+
 	test('updateCategoryBlocked should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
 
 		const data = {
 			test: 'test-data'
-		}
+		};
 		const expectedPayload = { data, type: UPDATE_CATEGORY_BLOCKED};
 		store.dispatch(blockingActions.updateCategoryBlocked(data));
 
@@ -71,5 +86,59 @@ describe('app/panel/actions/BlockingActions.js', () => {
 		expect(actions).toEqual([expectedPayload]);
 	});
 
+	test('updateTrackerBlocked should resolve', () => {
+		const paused_blocking = 'test-data';
+		const sitePolicy = 'test-site';
+		const store = mockStore({
+			summary: {
+				paused_blocking, 
+				sitePolicy
+			}	
+		});
+		const data = { test: 'test-data' };
+		const expectedPayload = { 
+			data, 
+			type: UPDATE_TRACKER_BLOCKED,
+			paused_blocking, 
+			sitePolicy 
+		};
+
+		store.dispatch(blockingActions.updateTrackerBlocked(data));
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
+
+	test('updateTrackerTrustRestrict should resolve', () => {
+		const pageHost = 'test-data';
+		const store = mockStore({
+			summary: {
+				pageHost
+			}
+		});
+		const data = { test: 'test-data'};	
+		const expectedPayload = {
+			data,
+			type: UPDATE_TRACKER_TRUST_RESTRICT,
+			pageHost
+		};
+
+		store.dispatch(blockingActions.updateTrackerTrustRestrict(data));
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
+
+	test('toggleExpandAll should resolve', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+		const data = {
+			test: 'test-data'
+		};
+
+		const expectedPayload = { data, type: TOGGLE_EXPAND_ALL};
+		store.dispatch(blockingActions.toggleExpandAll(data));
+
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
 
 });
