@@ -42,6 +42,51 @@ const mockStore = configureStore(middlewares);
 
 describe('app/panel/actions/SettingsActions.js', () => {
 
+	test('selectItem should resolve', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+		const data = { test: 'test-data' };
+		const expectedPayload = {
+			data, 
+			type: SELECT_ITEM
+		}
+
+		store.dispatch(settingsActions.selectItem(data));
+
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
+
+	test('updateBlockAllTrackers should resolve', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+		const data = { test: 'test-data' };
+		const expectedPayload = {
+			data, 
+			type: UPDATE_SETTINGS_BLOCK_ALL_TRACKERS
+		}
+
+		store.dispatch(settingsActions.updateBlockAllTrackers(data));
+
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
+
+	test('updateCategoryBlocked should resolve', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+		const data = { test: 'test-data' };
+		const expectedPayload = {
+			data, 
+			type: UPDATE_SETTINGS_CATEGORY_BLOCKED
+		}
+
+		store.dispatch(settingsActions.updateCategoryBlocked(data));
+
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
+
 	test('updateTrackerBlocked should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
@@ -57,14 +102,14 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		expect(actions).toEqual([expectedPayload]);
 	});
 
-	test.only('showNotification should resolve', () => {
+	test('showNotification should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
 		const data = { test: 'test-data' };
 		const expectedPayload = {
 			data, 
-			type: DO_NOTHING
-		}
+			type: 'DO_NOTHING'
+		};
 
 		store.dispatch(settingsActions.showNotification(data));
 
@@ -76,7 +121,7 @@ describe('app/panel/actions/SettingsActions.js', () => {
 	test('toggleExpandAll should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
-		const data = {test: 'test-data'};
+		const data = { test: 'test-data' };
 		const expectedPayload = {
 			data, 
 			type: SETTINGS_TOGGLE_EXPAND_ALL
