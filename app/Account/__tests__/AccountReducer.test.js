@@ -50,7 +50,7 @@ describe('app/account/Account reducer', () => {
 			loggedIn: true,
 		};
 
-		const action = { data, type: LOGIN_SUCCESS};
+		const action = { data, type: LOGIN_SUCCESS };
 		const initState = Immutable.merge(initialState,{
 			loggedIn: data.loggedIn
 		});	
@@ -64,7 +64,23 @@ describe('app/account/Account reducer', () => {
 		});
 	});
 
+	test('reducer correctly handles logout success', () => {
+		const data = {
+			loggedIn: false,
+		};	
+		const action = { data, type: LOGOUT_SUCCESS };
+		const initState = Immutable.merge(initialState, {
+			loggedIn: data.loggedIn
+		});
 
+		expect(AccountReducer(initState, action)).toEqual({
+			loggedIn: false,
+			userID: '',
+			user: null,
+			userSettings: null,
+			subscriptionData: null
+		});
 
+	});
 
 });
