@@ -59,7 +59,7 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		expect(actions).toEqual([expectedPayload]);
 	});
 
-	test.only('toggleCheckbox should resolve', () => {
+	test('toggleCheckbox should resolve', () => {
 		let type;
 		const initialState = {};
 		const store = mockStore(initialState);
