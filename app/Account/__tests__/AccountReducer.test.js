@@ -31,10 +31,10 @@ const initialState = Immutable({
 	user: null,
 	userSettings: null,
 	subscriptionData: null
-
 });
 
 describe('app/account/Account reducer', () => {
+
 	test('initial state is correct', () => {
 		expect(AccountReducer(undefined, {})).toEqual({
 			loggedIn: false,
@@ -82,5 +82,107 @@ describe('app/account/Account reducer', () => {
 		});
 
 	});
+
+	test('reducer correctly handles GET_USER_SUCCESS', () => {
+		const data = {
+			loggedIn: true, 
+			user: 'test@example.com'
+		};
+		const action = { 
+			data, 
+			type: GET_USER_SUCCESS, 
+			payload: data.user
+		};
+
+		const initState = Immutable.merge(initialState,{ 
+			loggedIn: data.loggedIn,
+			user: data.user
+		});
+	
+		expect(AccountReducer(initState, action.payload)).toEqual({
+			loggedIn: true,
+			userID: '',
+			user: 'test@example.com',
+			userSettings: null,
+			subscriptionData: null
+		});
+	});
+
+	test('reducer correctly handles GET_USER_SETTINGS_SUCCESS', () => {
+		const data = {
+			loggedIn: true,
+			userSettings: 'test-settings'
+		};
+
+		const action = { 
+			data, 
+			type: GET_USER_SETTINGS_SUCCESS, 
+			payload: data.userSettings
+		};
+
+		const initState = Immutable.merge(initialState, {
+			loggedIn: data.loggedIn,
+			userSettings: data.userSettings
+		});
+
+		expect(AccountReducer(initState, action.payload)).toEqual({
+			loggedIn: true,
+			userID: '',
+			user: null,
+			userSettings: 'test-settings',
+			subscriptionData: null
+		});
+	});
+
+	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_FAIL', () => {
+		const data = {
+			subscriptionData: null
+		};
+		const action = {
+			data, 
+			type: 'GET_USER_SUBSCRIPTION_DATA_FAIL'
+			//subscriptionData: initialState.subscriptionData
+		};
+
+		const initState = Immutable.merge(initialState,{
+			subscriptionData: data.subscriptionData
+		});
+
+		expect(AccountReducer(initState, {})).toEqual({
+			loggedIn: false,
+			userID: '',
+			user: null,
+			userSettings: null,
+			subscriptionData: null
+		});
+
+	});
+
+	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_SUCCESS', () => {
+		const data = {
+			loggedIn: true,
+			subscriptionData: 'test-data'
+		};
+		const action = {
+			data, 
+			type: GET_USER_SUBSCRIPTION_DATA_SUCCESS,
+			payload: data.subscriptionData
+		}
+
+		const initState = Immutable.merge(initialState, {
+			loggedIn: data.loggedIn,
+			subscriptionData: action.payload
+		});
+
+		expect(AccountReducer(initState, action.payload)).toEqual({
+			loggedIn: true,
+			userID: '',
+			user: null,
+			userSettings: null,
+			subscriptionData: 'test-data'
+		});
+
+	});
+
 
 });
