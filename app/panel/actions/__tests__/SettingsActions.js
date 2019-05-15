@@ -39,6 +39,11 @@ import * as msg from '../../utils/msg';
 import { hashCode } from '../../../../src/utils/common';
 import globals from '../../../../src/classes/Globals';
 
+// Fake the translation function to only return the translation key
+global.t = function (str) {
+	return str;
+};
+
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
@@ -123,9 +128,7 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		expect(actions).toEqual([expectedPayload]);
 	});
 
-
-
-	test.skip('updateDatabase should resolve', () => {
+	test('updateDatabase should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
 		let resultText;
@@ -134,36 +137,38 @@ describe('app/panel/actions/SettingsActions.js', () => {
 			type: UPDATE_DATABASE
 		}	
 
-		// msg.sendMessageInPromise = jest.fn(resultText => new Promise((result) => {
-		// 	switch (resultText) {
-		// 		case 'settings_update_success':
-		// 			if(result && result.success === true) {
-		// 				if(result.updated === true){
-		// 					resultText = 'settings_update_success';
-		// 				}
-		// 			}	
-		// 			//resolves(result);			
-		// 			//break;
-		// 		case 'settings_update_up_to_date': 
-		// 			if(result && result.success !== true){
-		// 				resultText = 'settings_update_up_to_date';
-		// 			}	
-		// 			//resolves(result);
-		// 		default:
-		// 			resultText = 'settings_update_failed';
-		// 			//resolves();
-		// 	}
-		// }));
+		const testResult = { 
+			success: true,
+			updated: true
+		};
+		msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
+			switch (name) {
+				case 'update_database': {
+					if( testResult.success === true ){
+						if( testResult.updated === true ){
+							expectedPayload.resultText = 'settings_update_success';
+							resolve(testResult);
+							break;	
+						}
+					}
+					else {
+						expectedPayload.resultText = 'settings_update_up_to_date';
+						resolve(testResult);
+						break;
+					}
+				}	
+				default: 
+					expectedPayload.resultText = 'settings_update_failed';
+					resolve();
+			}
+		}));
 
-		// return store.dispatch(settingsActions.updateDatabase());
-		// 	const actions = store.getActions();
-		// 	expect(actions).toEqual([expectedPayload]);
-		// });
-		expect(true).toBe(true);
+		return store.dispatch(settingsActions.updateDatabase())
+			.then(() => {
+				const actions = store.getActions();
+				expect(actions).toEqual([expectedPayload]);
+		});
 	});
-
-
-
 
 	test('updateBlockAllTrackers should resolve', () => {
 		const initialState = {};
