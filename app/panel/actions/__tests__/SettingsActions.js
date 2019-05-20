@@ -39,15 +39,106 @@ import * as msg from '../../utils/msg';
 import { hashCode } from '../../../../src/utils/common';
 import globals from '../../../../src/classes/Globals';
 
-// Fake the translation function to only return the translation key
-global.t = function (str) {
-	return str;
-};
+
+// Importing Mock Data
+// jest.mock('../../../../src/classes/Globals', () => {
+// 	BROWSER_INFO: jest.fn();
+// });
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 describe('app/panel/actions/SettingsActions.js', () => {
+
+	test('updateSettingsData should resolve', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+		const testPortData = { test: 'test-data'};
+		const promisedTestData = { test: 'test-data2'};
+		let expectedPayload = {
+			type: GET_SETTINGS_DATA,
+			data: promisedTestData
+		}
+
+		if(testPortData){
+			expectedPayload = {
+				type: GET_SETTINGS_DATA,
+				data: testPortData
+			}
+
+			store.dispatch(settingsActions.updateSettingsData(testPortData));
+
+			const actions = store.getActions();
+			expect(actions).toEqual([expectedPayload]);
+		}
+		else {
+			msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
+				switch (name) {
+					case 'getPanelData': {
+						resolve(promisedTestData);
+						break;
+					}	
+					default: 
+						resolve();
+				}
+			}));
+
+			store.dispatch(settingsActions.updateSettingsData(promisedTestData));
+					const actions = store.getActions();
+					expect(actions).toEqual([expectedPayload]);
+		}	
+	});
+
+
+
+
+	test.skip('exportSettings should resolve', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+		const data = { test: 'test-data'};
+		let expectedPayload = {
+			data, 
+			type: EXPORT_SETTINGS
+		}
+		const testPageUrl = 'yourdailydish.com';
+		const url = testPageUrl || ''; 
+		globals.BROWSER_INFO.name = jest.fn(() => 'edge');
+			
+		console.log( url.search('http') );
+
+		if( url.search('http') === -1 ||
+			(globals.BROWSER_INFO.name === 'edge' && url.search('www.msn.com/spartan') !== -1)){
+			console.log('here 0');
+			expectedPayload = {
+				type: EXPORT_SETTINGS,
+				data: 'RESERVED_PAGE',
+			}
+
+			return store.dispatch(settingsActions.exportSettings(data))
+				.then(() => {
+					const actions = store.getActions();
+					expect(actions).toEqual([expectedPayload]);
+			});
+		}
+
+		msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
+			switch (name) {
+				case 'getSettingsForExport': {
+					resolve(data);
+				}	
+				default: 
+					resolve();
+			}
+		}));
+
+		return store.dispatch(settingsActions.exportSettings(data))
+			.then(() => {
+				const actions = store.getActions();
+				expect(actions).toEqual([expectedPayload]);
+		});
+	});
+
+
 
 	test('selectItem should resolve', () => {
 		const initialState = {};
@@ -230,7 +321,6 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		expect(actions).toEqual([expectedPayload]);
 	});
 
-
 	test('toggleExpandAll should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
@@ -245,8 +335,6 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const actions = store.getActions();
 		expect(actions).toEqual([expectedPayload]);
 	});
-
-
 
 	test('updateSearchValue should resolve', () => {
 		const initialState = {};
@@ -292,6 +380,5 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const actions = store.getActions();
 		expect(actions).toEqual([expectedPayload]);
 	});
-
 
 });
