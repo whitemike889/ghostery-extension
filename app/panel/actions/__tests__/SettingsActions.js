@@ -38,12 +38,6 @@ import * as msg from '../../utils/msg';
 import { hashCode } from '../../../../src/utils/common';
 import globals from '../../../../src/classes/Globals';
 
-
-// Importing Mock Data
-// jest.mock('../../../../src/classes/Globals', () => {
-// 	BROWSER_INFO: jest.fn();
-// });
-
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
@@ -86,6 +80,43 @@ describe('app/panel/actions/SettingsActions.js', () => {
 					const actions = store.getActions();
 					expect(actions).toEqual([expectedPayload]);
 		}	
+	});
+
+	test('importSettingsDialog', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+		const data = { test: 'test-data'};
+		const expectedPayload = {
+			type: IMPORT_SETTINGS_DIALOG,
+			data
+		};
+		let url = 'test';
+		if( url.search('http') === -1 ){
+			expectedPayload.data = 'false';
+
+			store.dispatch(settingsActions.importSettingsDialog());
+
+			const actions = store.getActions();
+			expect(actions).toEqual([expectedPayload]);
+		}
+		else {
+			msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
+				switch (name) {
+					case 'showBrowseWindow': {
+						resolve(data);
+					}	
+					default: 
+						resolve();
+				}
+			}));
+
+			return store.dispatch(settingsActions.importSettingsDialog(data))
+				.then(() => {
+					const actions = store.getActions();
+					expect(actions).toEqual([expectedPayload]);
+			});	
+		}
+
 	});
 
 	test('exportSettings should resolve', () => {
