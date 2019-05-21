@@ -33,8 +33,7 @@ import {
 	GET_SETTINGS_DATA,
 	DO_NOTHING
 } from '../../constants/constants';
-// import { sendMessageInPromise } from '../../utils/msg';
-// import bannerStatus from '../../reducers/settings';
+import bannerStatus from '../../reducers/settings';
 import * as msg from '../../utils/msg';
 import { hashCode } from '../../../../src/utils/common';
 import globals from '../../../../src/classes/Globals';
@@ -89,10 +88,7 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		}	
 	});
 
-
-
-
-	test.skip('exportSettings should resolve', () => {
+	test('exportSettings should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
 		const data = { test: 'test-data'};
@@ -100,44 +96,45 @@ describe('app/panel/actions/SettingsActions.js', () => {
 			data, 
 			type: EXPORT_SETTINGS
 		}
-		const testPageUrl = 'yourdailydish.com';
-		const url = testPageUrl || ''; 
+		let url = 'test';
+		// mock Browser info
 		globals.BROWSER_INFO.name = jest.fn(() => 'edge');
-			
-		console.log( url.search('http') );
 
-		if( url.search('http') === -1 ||
-			(globals.BROWSER_INFO.name === 'edge' && url.search('www.msn.com/spartan') !== -1)){
-			console.log('here 0');
-			expectedPayload = {
-				type: EXPORT_SETTINGS,
-				data: 'RESERVED_PAGE',
-			}
+		if(url.search('http') === -1) {
+			expectedPayload.data = 'RESERVED_PAGE';	
+
+			store.dispatch(settingsActions.exportSettings());
+
+			const actions = store.getActions();
+			expect(actions).toEqual([expectedPayload]);	
+		}
+		else if(globals.BROWSER_INFO.name === 'edge' && (url.search('www.msn.com/spartan') !== -1)){
+			expectedPayload.data = 'RESERVED_PAGE';	
+
+			store.dispatch(settingsActions.exportSettings());
+
+			const actions = store.getActions();
+			expect(actions).toEqual([expectedPayload]);	
+		}
+		else {
+			msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
+				switch (name) {
+					case 'getSettingsForExport': {
+						resolve(data);
+					}	
+					default: 
+						resolve();
+				}
+			}));
 
 			return store.dispatch(settingsActions.exportSettings(data))
 				.then(() => {
 					const actions = store.getActions();
 					expect(actions).toEqual([expectedPayload]);
-			});
+			});			
 		}
 
-		msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
-			switch (name) {
-				case 'getSettingsForExport': {
-					resolve(data);
-				}	
-				default: 
-					resolve();
-			}
-		}));
-
-		return store.dispatch(settingsActions.exportSettings(data))
-			.then(() => {
-				const actions = store.getActions();
-				expect(actions).toEqual([expectedPayload]);
-		});
 	});
-
 
 
 	test('selectItem should resolve', () => {
