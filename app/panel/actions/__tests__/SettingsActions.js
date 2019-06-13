@@ -13,7 +13,6 @@
 
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as settingsActions from '../settingsActions';
 import {
 	IMPORT_SETTINGS_DIALOG,
 	IMPORT_SETTINGS_NATIVE,
@@ -41,7 +40,38 @@ import globals from '../../../../src/classes/Globals';
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
+jest.mock('fs', () => ({
+    readFileSync: jest.fn()
+}));
+
+import * as settingsActions from '../settingsActions';
+import fs from 'fs';
+
 describe('app/panel/actions/SettingsActions.js', () => {
+
+	test.only('Should return the parsed JSON from a file specified as param', (done) => {
+		const initialState = {};
+		const store = mockStore(initialState);	
+
+		console.log(1);
+        const fileReader = new FileReader();
+        console.log( fileReader.readyState );
+        fs.readFileSync.mockReturnValue('{ "test": 1 }');
+
+        
+
+        console.log(2);
+        // this is coming in as undefined
+
+        const parseJSON = settingsActions.importSettingsNative('test.json');
+       // console.log( settingsActions.importSettingsNative('test.json') );
+        const result = fileReader.parseJSON;
+        // console.log( parseJSON() );
+        // console.log( result );
+        expect(result).toEqual({ "test": 1 });
+        done();
+    });    
+
 
 	test('updateSettingsData should resolve', () => {
 		const initialState = {};
@@ -118,6 +148,51 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		}
 
 	});
+
+
+	test.skip('importSettingsNative should resolve', () =>{
+		const initialState = {};
+		const store = mockStore(initialState);
+		let settings = { test: 'test-file'};
+		let expectedPayload = {
+		 	type: IMPORT_SETTINGS_NATIVE,	
+		 	settings		
+		 };
+		const testFileToLoad = {"hash":-2040900451,"settings":{"conf":{"alert_bubble_pos":"br","alert_bubble_timeout":15,"alert_expanded":false,"block_by_default":false,"enable_ad_block":true,"enable_anti_tracking":true,"enable_autoupdate":true,"enable_click2play":true,"enable_click2play_social":true,"enable_human_web":true,"enable_metrics":false,"enable_offers":true,"enable_smart_block":true,"expand_all_trackers":false,"hide_alert_trusted":false,"ignore_first_party":true,"import_callout_dismissed":true,"is_expanded":false,"is_expert":false,"notify_library_updates":false,"notify_upgrade_updates":true,"reload_banner_status":{"dismissals":[],"show_time":1559165704372,"show":true},"selected_app_ids":{"41":1,"868":1,"1291":1,"2337":1,"2383":1},"show_alert":true,"show_badge":true,"show_cmp":true,"show_tracker_urls":true,"site_specific_blocks":{},"site_specific_unblocks":{},"toggle_individual_trackers":true,"trackers_banner_status":{"dismissals":[],"show_time":1559165704372,"show":true},"current_theme":"default","site_blacklist":[],"site_whitelist":["mediasetplay.mediaset.it"]}}};
+		const fileReader = new FileReader();
+		const onLoadMock = { onload: jest.fn() };
+
+
+		console.log('here 0');
+		// need to mock onload
+		fileReader.onLoadMock = (testFileLoadedEvent) => {
+			console.log('load event is firing');
+			try {	
+				console.log('here 1');
+				const backup = {
+					"hash": -2040900451
+				};
+				if(backup.hash !== testFileToLoad.hash){
+					throw new Error('Invalid Hash');
+				}
+				store.dispatch(settingsActions.importSettingsNative());
+
+				const actions = store.getActions();
+				expect(actions).toEqual([expectedPayload]);
+	
+			}
+			catch(err){
+				console.log(err);
+		
+			}
+		};
+		console.log('here 2');
+		//fileReader.readAsText(testFileToLoad, 'UTF-8');
+	});
+
+
+
+
 
 	test('exportSettings should resolve', () => {
 		const initialState = {};
