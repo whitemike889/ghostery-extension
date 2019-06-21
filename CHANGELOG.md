@@ -1,10 +1,19 @@
-### GHOSTERY 8.3.2 (UNRELEASED)
+### GHOSTERY 8.3.4 (May 8, 2019)
+
++ Fixes bug in Click2Play redirect blocking
+
+### GHOSTERY 8.3.3 (April 24, 2019)
+
++ Fixes bug where Ad-Blocker/Anti-Tracking modules did not respect whitelist settings
++ Fixes bug in category description names
+
+### GHOSTERY 8.3.2 (April 22, 2019)
 
 + Ghostery tracker panel now updates dynamically in real time!
 + Remove unsupported file types for Opera automated-review
-+ Removed uneccesary files for slimmer production build
-+ Sync account creation UI betweem intro hub, panel and signon-web
-+ Performance improvments when browsing certian Google sites (gmail, maps)
++ Removed unnecessary files for slimmer production build
++ Sync account creation UI between intro hub, panel and auth-web
++ Performance improvements when browsing certain Google sites (gmail, maps)
 + Feature parity for Edge browser (Human Web, Rewards)
 + Clean up various errors thrown by content scripts and message handlers
 + Updated Readme (team members and open-source projects)

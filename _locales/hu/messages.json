@@ -458,9 +458,6 @@
 	"summary_description_not_scanned_2": {
 		"message": "Navigáljon másik oldalra és ígérjük, hogy elvégezzük a feladatot."
 	},
-	"summary_custom_settings": {
-		"message": "Egyéni beállítások"
-	},
 	"summary_trust_site": {
 		"message": "Megbízható oldal"
 	},
@@ -481,9 +478,6 @@
 	},
 	"summary_pause_ghostery_tooltip": {
 		"message": "Ghostery kiterjesztés szüneteltetése."
-	},
-	"summary_pause_ghostery_ab_pause": {
-		"message": "Szünet"
 	},
 	"pause_30_min": {
 		"message": "30 percre"
@@ -508,9 +502,6 @@
 	},
 	"summary_resume_ghostery_tooltip": {
 		"message": "Ghostery kiterjesztés szüneteltetve. Kattintson a visszatéréshez."
-	},
-	"summary_resume_ghostery_ab_pause": {
-		"message": "Folytatás"
 	},
 	"summary_show_menu": {
 		"message": "menü megjelenítése"
@@ -1092,6 +1083,12 @@
 	"page_load": {
 		"message": "Oldal betöltése"
 	},
+	"requests_modified": {
+		"message": "Igénylések módosítva:"
+	},
+	"requests_modified_tooltip": {
+		"message": "Az Anti-Tracking és a Hirdetésblokkolás által módosított követési igénylések és elemek száma összesen"
+	},
 	"trackers_blocked": {
 		"message": "Blokkolt trackerek:"
 	},
@@ -1283,9 +1280,6 @@
 	},
 	"tooltip_restrict_on": {
 		"message": "A trackerek blokkolva vannak és az Anti-Tracking (követés tiltása) be van kapcsolva ezen az oldalon. Kattintson a visszavonáshoz."
-	},
-	"tooltip_custom_settings": {
-		"message": "Használja a kiválasztott tracker-beállításaimat."
 	},
 	"tooltip_pause": {
 		"message": "Ghostery szüneteltetése"
@@ -1853,8 +1847,11 @@
 	"hub_login_label_password_invalid": {
 		"message": "8–50 karaktert használjon."
 	},
+	"hub_login_link_dont_have_account": {
+		"message": "Nem rendelkezik fiókkal?"
+	},
 	"hub_login_link_create_account": {
-		"message": "Nem rendelkezik fiókkal? Regisztráljon!"
+		"message": "Regisztráljon!"
 	},
 	"hub_login_button_submit": {
 		"message": "Bejelentkezés"
@@ -1898,8 +1895,11 @@
 	"hub_create_account_checkbox_promotions": {
 		"message": "Küldjenek nekem friss Ghostery híreket és promóciókat!"
 	},
+	"hub_create_account_already_have_account": {
+		"message": "Már van Ghostery fiókja?"
+	},
 	"hub_create_account_link_login": {
-		"message": "Már van fiókom. Bejelentkezés."
+		"message": "Jelentkezzen be itt!"
 	},
 	"hub_create_account_button_submit": {
 		"message": "Fiók létrehozása"
@@ -2124,6 +2124,9 @@
 	"subscription_submit_issue": {
 		"message": "Probléma jelentése"
 	},
+	"subscription_upgrade_to": {
+		"message": "Frissítés erre:"
+	},
 	"panel_stats_menu_cumulative": {
 		"message": "Összesített"
 	},
@@ -2203,5 +2206,29 @@
 	},
 	"panel_stats_pitch_modal_tooltip": {
 		"message": "Összes naplózott statisztika törlése eddig az időpontig."
+	},
+	"cookie": {
+		"message": "cookie"
+	},
+	"cookies": {
+		"message": "cookie-k"
+	},
+	"fingerprint": {
+		"message": "ujjlenyomat"
+	},
+	"fingerprints": {
+		"message": "ujjlenyomatok"
+	},
+	"ad": {
+		"message": "hirdetés"
+	},
+	"ads": {
+		"message": "hirdetések"
+	},
+	"cliqz_feature_status_on": {
+		"message": "Be"
+	},
+	"cliqz_feature_status_off": {
+		"message": "Ki"
 	}
 }
