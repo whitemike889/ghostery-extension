@@ -56,7 +56,7 @@ describe('app/panel/actions/SummaryActions.js', () => {
 		const store = mockStore(initialState);
 
 		const data = { test: true };
-		const expectedPayload = { data,type: UPDATE_SUMMARY_DATA };
+		const expectedPayload = { data, type: UPDATE_SUMMARY_DATA };
 		store.dispatch(summaryActions.updateSummaryData(data));
 
 		const actions = store.getActions();

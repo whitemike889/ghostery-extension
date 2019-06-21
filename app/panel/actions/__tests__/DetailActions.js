@@ -24,7 +24,7 @@ describe('app/panel/actions/DetailActions.js', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
 
-		const expectedPayload = { type: TOGGLE_EXPANDED};
+		const expectedPayload = { type: TOGGLE_EXPANDED };
 		store.dispatch(detailActions.toggleExpanded());
 
 		const action = store.getActions();

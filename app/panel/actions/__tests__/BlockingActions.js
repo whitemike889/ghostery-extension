@@ -34,8 +34,8 @@ describe('app/panel/actions/BlockingActions.js', () => {
 
 		const data = {
 			test: 'test-data'
-		}
-		const expectedPayload = { data, type: UPDATE_BLOCKING_DATA}
+		};
+		const expectedPayload = { data, type: UPDATE_BLOCKING_DATA };
 		store.dispatch(blockingActions.updateBlockingData(data));
 
 		const actions = store.getActions();
@@ -49,8 +49,8 @@ describe('app/panel/actions/BlockingActions.js', () => {
 
 		const data = {
 			test: 'test-data'
-		}
-		const expectedPayload = { data, type: UPDATE_BLOCK_ALL_TRACKERS};
+		};
+		const expectedPayload = { data, type: UPDATE_BLOCK_ALL_TRACKERS };
 		store.dispatch(blockingActions.updateBlockAllTrackers(data));
 
 		const actions = store.getActions();
@@ -79,7 +79,7 @@ describe('app/panel/actions/BlockingActions.js', () => {
 		const data = {
 			test: 'test-data'
 		};
-		const expectedPayload = { data, type: UPDATE_CATEGORY_BLOCKED};
+		const expectedPayload = { data, type: UPDATE_CATEGORY_BLOCKED };
 		store.dispatch(blockingActions.updateCategoryBlocked(data));
 
 		const actions = store.getActions();
@@ -91,16 +91,16 @@ describe('app/panel/actions/BlockingActions.js', () => {
 		const sitePolicy = 'test-site';
 		const store = mockStore({
 			summary: {
-				paused_blocking, 
+				paused_blocking,
 				sitePolicy
-			}	
+			}
 		});
 		const data = { test: 'test-data' };
-		const expectedPayload = { 
-			data, 
+		const expectedPayload = {
+			data,
 			type: UPDATE_TRACKER_BLOCKED,
-			paused_blocking, 
-			sitePolicy 
+			paused_blocking,
+			sitePolicy
 		};
 
 		store.dispatch(blockingActions.updateTrackerBlocked(data));
@@ -115,7 +115,7 @@ describe('app/panel/actions/BlockingActions.js', () => {
 				pageHost
 			}
 		});
-		const data = { test: 'test-data'};	
+		const data = { test: 'test-data' };
 		const expectedPayload = {
 			data,
 			type: UPDATE_TRACKER_TRUST_RESTRICT,
@@ -134,11 +134,10 @@ describe('app/panel/actions/BlockingActions.js', () => {
 			test: 'test-data'
 		};
 
-		const expectedPayload = { data, type: TOGGLE_EXPAND_ALL};
+		const expectedPayload = { data, type: TOGGLE_EXPAND_ALL };
 		store.dispatch(blockingActions.toggleExpandAll(data));
 
 		const actions = store.getActions();
 		expect(actions).toEqual([expectedPayload]);
 	});
-
 });

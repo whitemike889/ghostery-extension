@@ -17,19 +17,18 @@ import * as msg from '../../utils/msg';
 import * as panelActions from '../PanelActions';
 import {
 	TOGGLE_CLIQZ_FEATURE,
-	UPDATE_PANEL_DATA,	
+	UPDATE_PANEL_DATA,
 	SHOW_NOTIFICATION,
 	CLOSE_NOTIFICATION,
 	TOGGLE_EXPERT,
 	SET_THEME,
-	CLEAR_THEME	
+	CLEAR_THEME
 } from '../../constants/constants';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 describe('app/panel/actions/PanelActions.js', () => {
-
 	test('toggleCliqzFeature action should resolve correctly', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
@@ -50,7 +49,7 @@ describe('app/panel/actions/PanelActions.js', () => {
 		const store = mockStore(initialState);
 		const data = {
 			test: 'test-data'
-		}
+		};
 
 		const expectedPayload = { data, type: UPDATE_PANEL_DATA };
 		store.dispatch(panelActions.updatePanelData(data));
@@ -64,9 +63,9 @@ describe('app/panel/actions/PanelActions.js', () => {
 		const store = mockStore(initialState);
 		const data = {
 			test: 'test-data'
-		}
+		};
 
-		const expectedPayload = {data, type: SHOW_NOTIFICATION};
+		const expectedPayload = { data, type: SHOW_NOTIFICATION };
 		store.dispatch(panelActions.showNotification(data));
 
 		const action = store.getActions();
@@ -78,9 +77,9 @@ describe('app/panel/actions/PanelActions.js', () => {
 		const store = mockStore(initialState);
 		const data = {
 			test: 'test-data'
-		}
+		};
 
-		const expectedPayload = {data, type: CLOSE_NOTIFICATION};
+		const expectedPayload = { data, type: CLOSE_NOTIFICATION };
 		store.dispatch(panelActions.closeNotification(data));
 
 		const action = store.getActions();
@@ -91,7 +90,7 @@ describe('app/panel/actions/PanelActions.js', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
 
-		const expectedPayload = {type: TOGGLE_EXPERT};
+		const expectedPayload = { type: TOGGLE_EXPERT };
 		store.dispatch(panelActions.toggleExpert());
 
 		const action = store.getActions();
@@ -110,7 +109,7 @@ describe('app/panel/actions/PanelActions.js', () => {
 				case 'getTheme':
 					resolve(data);
 					break;
-				case 'account.getTheme': 
+				case 'account.getTheme':
 					resolve(data);
 				default:
 					resolve();
@@ -121,7 +120,6 @@ describe('app/panel/actions/PanelActions.js', () => {
 			const actions = store.getActions();
 			expect(actions).toEqual([expectedPayload]);
 		});
-
 	});
 
 	test('getTheme action should resolve with no theme set', () => {
@@ -139,7 +137,5 @@ describe('app/panel/actions/PanelActions.js', () => {
 			const actions = store.getActions();
 			expect(actions).toEqual([expectedPayload]);
 		});
-
 	});
-
 });

@@ -37,105 +37,101 @@ import * as msg from '../../utils/msg';
 import { hashCode } from '../../../../src/utils/common';
 import globals from '../../../../src/classes/Globals';
 
+import * as settingsActions from '../settingsActions';
+import fs from 'fs';
+
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 jest.mock('fs', () => ({
-    readFileSync: jest.fn()
+	readFileSync: jest.fn()
 }));
 
-import * as settingsActions from '../settingsActions';
-import fs from 'fs';
-
 describe('app/panel/actions/SettingsActions.js', () => {
-
-	test.only('Should return the parsed JSON from a file specified as param', (done) => {
+	test.skip('Should return the parsed JSON from a file specified as param', (done) => {
 		const initialState = {};
-		const store = mockStore(initialState);	
+		const store = mockStore(initialState);
 
 		console.log(1);
-        const fileReader = new FileReader();
-        console.log( fileReader.readyState );
-        fs.readFileSync.mockReturnValue('{ "test": 1 }');
+		const fileReader = new FileReader();
+		console.log(fileReader.readyState);
+		fs.readFileSync.mockReturnValue('{ "test": 1 }');
 
-        
 
-        console.log(2);
-        // this is coming in as undefined
+		console.log(2);
+		// this is coming in as undefined
 
-        const parseJSON = settingsActions.importSettingsNative('test.json');
-       // console.log( settingsActions.importSettingsNative('test.json') );
-        const result = fileReader.parseJSON;
-        // console.log( parseJSON() );
-        // console.log( result );
-        expect(result).toEqual({ "test": 1 });
-        done();
-    });    
+		const parseJSON = settingsActions.importSettingsNative('test.json');
+		// console.log( settingsActions.importSettingsNative('test.json') );
+		const result = fileReader.parseJSON;
+		// console.log( parseJSON() );
+		// console.log( result );
+		expect(result).toEqual({ test: 1 });
+		done();
+	});
 
 
 	test('updateSettingsData should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
-		const testPortData = { test: 'test-data'};
-		const promisedTestData = { test: 'test-data2'};
+		const testPortData = { test: 'test-data' };
+		const promisedTestData = { test: 'test-data2' };
 		let expectedPayload = {
 			type: GET_SETTINGS_DATA,
 			data: promisedTestData
-		}
+		};
 
-		if(testPortData){
+		if (testPortData) {
 			expectedPayload = {
 				type: GET_SETTINGS_DATA,
 				data: testPortData
-			}
+			};
 
 			store.dispatch(settingsActions.updateSettingsData(testPortData));
 
 			const actions = store.getActions();
 			expect(actions).toEqual([expectedPayload]);
-		}
-		else {
+		} else {
 			msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
 				switch (name) {
 					case 'getPanelData': {
 						resolve(promisedTestData);
 						break;
-					}	
-					default: 
+					}
+					default:
 						resolve();
 				}
 			}));
 
 			store.dispatch(settingsActions.updateSettingsData(promisedTestData));
-					const actions = store.getActions();
-					expect(actions).toEqual([expectedPayload]);
-		}	
+			const actions = store.getActions();
+			expect(actions).toEqual([expectedPayload]);
+		}
 	});
 
 	test('importSettingsDialog', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
-		const data = { test: 'test-data'};
+		const data = { test: 'test-data' };
 		const expectedPayload = {
 			type: IMPORT_SETTINGS_DIALOG,
 			data
 		};
-		let url = 'test';
-		if( url.search('http') === -1 ){
+		const url = 'test';
+		if (url.search('http') === -1) {
 			expectedPayload.data = 'false';
 
 			store.dispatch(settingsActions.importSettingsDialog());
 
 			const actions = store.getActions();
 			expect(actions).toEqual([expectedPayload]);
-		}
-		else {
+		} else {
 			msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
 				switch (name) {
 					case 'showBrowseWindow': {
 						resolve(data);
-					}	
-					default: 
+					}
+					default:
 						resolve();
 				}
 			}));
@@ -144,21 +140,62 @@ describe('app/panel/actions/SettingsActions.js', () => {
 				.then(() => {
 					const actions = store.getActions();
 					expect(actions).toEqual([expectedPayload]);
-			});	
+				});
 		}
-
 	});
 
 
-	test.skip('importSettingsNative should resolve', () =>{
+	test.skip('importSettingsNative should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
-		let settings = { test: 'test-file'};
-		let expectedPayload = {
-		 	type: IMPORT_SETTINGS_NATIVE,	
-		 	settings		
+		const settings = { test: 'test-file' };
+		const expectedPayload = {
+		 	type: IMPORT_SETTINGS_NATIVE,
+		 	settings
 		 };
-		const testFileToLoad = {"hash":-2040900451,"settings":{"conf":{"alert_bubble_pos":"br","alert_bubble_timeout":15,"alert_expanded":false,"block_by_default":false,"enable_ad_block":true,"enable_anti_tracking":true,"enable_autoupdate":true,"enable_click2play":true,"enable_click2play_social":true,"enable_human_web":true,"enable_metrics":false,"enable_offers":true,"enable_smart_block":true,"expand_all_trackers":false,"hide_alert_trusted":false,"ignore_first_party":true,"import_callout_dismissed":true,"is_expanded":false,"is_expert":false,"notify_library_updates":false,"notify_upgrade_updates":true,"reload_banner_status":{"dismissals":[],"show_time":1559165704372,"show":true},"selected_app_ids":{"41":1,"868":1,"1291":1,"2337":1,"2383":1},"show_alert":true,"show_badge":true,"show_cmp":true,"show_tracker_urls":true,"site_specific_blocks":{},"site_specific_unblocks":{},"toggle_individual_trackers":true,"trackers_banner_status":{"dismissals":[],"show_time":1559165704372,"show":true},"current_theme":"default","site_blacklist":[],"site_whitelist":["mediasetplay.mediaset.it"]}}};
+		const testFileToLoad = {
+			hash: -2040900451,
+			settings: {
+				conf: {
+					alert_bubble_pos: 'br',
+					alert_bubble_timeout: 15,
+					alert_expanded: false,
+					block_by_default: false,
+					enable_ad_block: true,
+					enable_anti_tracking: true,
+					enable_autoupdate: true,
+					enable_click2play: true,
+					enable_click2play_social: true,
+					enable_human_web: true,
+					enable_metrics: false,
+					enable_offers: true,
+					enable_smart_block: true,
+					expand_all_trackers: false,
+					hide_alert_trusted: false,
+					ignore_first_party: true,
+					import_callout_dismissed: true,
+					is_expanded: false,
+					is_expert: false,
+					notify_library_updates: false,
+					notify_upgrade_updates: true,
+					reload_banner_status: { dismissals: [], show_time: 1559165704372, show: true },
+					selected_app_ids: {
+						41: 1, 868: 1, 1291: 1, 2337: 1, 2383: 1
+					},
+					show_alert: true,
+					show_badge: true,
+					show_cmp: true,
+					show_tracker_urls: true,
+					site_specific_blocks: {},
+					site_specific_unblocks: {},
+					toggle_individual_trackers: true,
+					trackers_banner_status: { dismissals: [], show_time: 1559165704372, show: true },
+					current_theme: 'default',
+					site_blacklist: [],
+					site_whitelist: ['mediasetplay.mediaset.it']
+				}
+			}
+		};
 		const fileReader = new FileReader();
 		const onLoadMock = { onload: jest.fn() };
 
@@ -167,68 +204,60 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		// need to mock onload
 		fileReader.onLoadMock = (testFileLoadedEvent) => {
 			console.log('load event is firing');
-			try {	
+			try {
 				console.log('here 1');
 				const backup = {
-					"hash": -2040900451
+					hash: -2040900451
 				};
-				if(backup.hash !== testFileToLoad.hash){
+				if (backup.hash !== testFileToLoad.hash) {
 					throw new Error('Invalid Hash');
 				}
 				store.dispatch(settingsActions.importSettingsNative());
 
 				const actions = store.getActions();
 				expect(actions).toEqual([expectedPayload]);
-	
-			}
-			catch(err){
+			} catch (err) {
 				console.log(err);
-		
 			}
 		};
 		console.log('here 2');
-		//fileReader.readAsText(testFileToLoad, 'UTF-8');
+		// fileReader.readAsText(testFileToLoad, 'UTF-8');
 	});
-
-
-
 
 
 	test('exportSettings should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
-		const data = { test: 'test-data'};
-		let expectedPayload = {
-			data, 
+		const data = { test: 'test-data' };
+		const expectedPayload = {
+			data,
 			type: EXPORT_SETTINGS
-		}
-		let url = 'test';
+		};
+		const url = 'test';
 		// mock Browser info
 		globals.BROWSER_INFO.name = jest.fn(() => 'edge');
 
-		if(url.search('http') === -1) {
-			expectedPayload.data = 'RESERVED_PAGE';	
+		if (url.search('http') === -1) {
+			expectedPayload.data = 'RESERVED_PAGE';
 
 			store.dispatch(settingsActions.exportSettings());
 
 			const actions = store.getActions();
-			expect(actions).toEqual([expectedPayload]);	
-		}
-		else if(globals.BROWSER_INFO.name === 'edge' && (url.search('www.msn.com/spartan') !== -1)){
-			expectedPayload.data = 'RESERVED_PAGE';	
+			expect(actions).toEqual([expectedPayload]);
+		} else if (globals.BROWSER_INFO.name === 'edge' && (url.search('www.msn.com/spartan') !== -1)) {
+			expectedPayload.data = 'RESERVED_PAGE';
 
 			store.dispatch(settingsActions.exportSettings());
 
 			const actions = store.getActions();
-			expect(actions).toEqual([expectedPayload]);	
-		}
-		else {
+			expect(actions).toEqual([expectedPayload]);
+		} else {
 			msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
 				switch (name) {
 					case 'getSettingsForExport': {
 						resolve(data);
-					}	
-					default: 
+					}
+					default:
 						resolve();
 				}
 			}));
@@ -237,9 +266,8 @@ describe('app/panel/actions/SettingsActions.js', () => {
 				.then(() => {
 					const actions = store.getActions();
 					expect(actions).toEqual([expectedPayload]);
-			});			
+				});
 		}
-
 	});
 
 
@@ -248,9 +276,9 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const store = mockStore(initialState);
 		const data = { test: 'test-data' };
 		const expectedPayload = {
-			data, 
+			data,
 			type: SELECT_ITEM
-		}
+		};
 
 		store.dispatch(settingsActions.selectItem(data));
 
@@ -262,15 +290,15 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		let type;
 		const initialState = {};
 		const store = mockStore(initialState);
-		let data = { test: 'test-data' };
+		const data = { test: 'test-data' };
 		const expectedPayload = {
-			data, 
+			data,
 			type: TOGGLE_CHECKBOX
 		};
-	
+
 		store.dispatch(settingsActions.toggleCheckbox(data));
 
-		const actions = store.getActions();	
+		const actions = store.getActions();
 		expect(actions).toEqual([expectedPayload]);
 	});
 
@@ -278,19 +306,19 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		let type;
 		const initialState = {};
 		const store = mockStore(initialState);
-		let data = {
+		const data = {
 			test: 'test-data',
 			event: 'trackers_banner_status'
-		}
+		};
 
-		if(data.event === 'trackers_banner_status'){
+		if (data.event === 'trackers_banner_status') {
 			type = UPDATE_NOTIFICATION_STATUS;
 		}
 
 		const expectedPayload = {
-			data, 
+			data,
 			type: UPDATE_NOTIFICATION_STATUS
-		}
+		};
 
 		store.dispatch(settingsActions.toggleCheckbox(data));
 
@@ -302,19 +330,19 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		let type;
 		const initialState = {};
 		const store = mockStore(initialState);
-		let data = {
+		const data = {
 			test: 'test-data',
 			event: 'reload_banner_status'
-		}
+		};
 
-		if(data.event === 'reload_banner_status'){
+		if (data.event === 'reload_banner_status') {
 			type = UPDATE_NOTIFICATION_STATUS;
 		}
 
 		const expectedPayload = {
-			data, 
+			data,
 			type: UPDATE_NOTIFICATION_STATUS
-		}
+		};
 
 		store.dispatch(settingsActions.toggleCheckbox(data));
 
@@ -329,29 +357,28 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const expectedPayload = {
 			resultText,
 			type: UPDATE_DATABASE
-		}	
+		};
 
-		const testResult = { 
+		const testResult = {
 			success: true,
 			updated: true
 		};
 		msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
 			switch (name) {
 				case 'update_database': {
-					if( testResult.success === true ){
-						if( testResult.updated === true ){
+					if (testResult.success === true) {
+						if (testResult.updated === true) {
 							expectedPayload.resultText = 'settings_update_success';
 							resolve(testResult);
-							break;	
+							break;
 						}
-					}
-					else {
+					} else {
 						expectedPayload.resultText = 'settings_update_up_to_date';
 						resolve(testResult);
 						break;
 					}
-				}	
-				default: 
+				}
+				default:
 					expectedPayload.resultText = 'settings_update_failed';
 					resolve();
 			}
@@ -361,7 +388,7 @@ describe('app/panel/actions/SettingsActions.js', () => {
 			.then(() => {
 				const actions = store.getActions();
 				expect(actions).toEqual([expectedPayload]);
-		});
+			});
 	});
 
 	test('updateBlockAllTrackers should resolve', () => {
@@ -369,9 +396,9 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const store = mockStore(initialState);
 		const data = { test: 'test-data' };
 		const expectedPayload = {
-			data, 
+			data,
 			type: UPDATE_SETTINGS_BLOCK_ALL_TRACKERS
-		}
+		};
 
 		store.dispatch(settingsActions.updateBlockAllTrackers(data));
 
@@ -384,9 +411,9 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const store = mockStore(initialState);
 		const data = { test: 'test-data' };
 		const expectedPayload = {
-			data, 
+			data,
 			type: UPDATE_SETTINGS_CATEGORY_BLOCKED
-		}
+		};
 
 		store.dispatch(settingsActions.updateCategoryBlocked(data));
 
@@ -401,7 +428,7 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const expectedPayload = {
 			data,
 			type: UPDATE_SETTINGS_TRACKER_BLOCKED
-		}
+		};
 
 		store.dispatch(settingsActions.updateTrackerBlocked(data));
 
@@ -414,7 +441,7 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const store = mockStore(initialState);
 		const data = { test: 'test-data' };
 		const expectedPayload = {
-			data, 
+			data,
 			type: 'DO_NOTHING'
 		};
 
@@ -429,9 +456,9 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const store = mockStore(initialState);
 		const data = { test: 'test-data' };
 		const expectedPayload = {
-			data, 
+			data,
 			type: SETTINGS_TOGGLE_EXPAND_ALL
-		}
+		};
 
 		store.dispatch(settingsActions.toggleExpandAll(data));
 
@@ -442,9 +469,9 @@ describe('app/panel/actions/SettingsActions.js', () => {
 	test('updateSearchValue should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
-		const data = {test: 'test-data'};
+		const data = { test: 'test-data' };
 		const expectedPayload = {
-			data, 
+			data,
 			type: SETTINGS_UPDATE_SEARCH_VALUE
 		};
 
@@ -457,9 +484,9 @@ describe('app/panel/actions/SettingsActions.js', () => {
 	test('handleSearchSubmit should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
-		const data = {test: 'test-data'};
+		const data = { test: 'test-data' };
 		const expectedPayload = {
-			data, 
+			data,
 			type: SETTINGS_SEARCH_SUBMIT
 		};
 
@@ -472,7 +499,7 @@ describe('app/panel/actions/SettingsActions.js', () => {
 	test('filter should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
-		const data = {test: 'test-data'};
+		const data = { test: 'test-data' };
 		const expectedPayload = {
 			data,
 			type: SETTINGS_FILTER
@@ -483,5 +510,4 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		const actions = store.getActions();
 		expect(actions).toEqual([expectedPayload]);
 	});
-
 });
