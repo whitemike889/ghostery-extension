@@ -100,7 +100,7 @@ describe('app/account/Account reducer', () => {
 		}));
 	});
 
-	test.only('reducer correctly handles GET_USER_SETTINGS_SUCCESS', () => {
+	test('reducer correctly handles GET_USER_SETTINGS_SUCCESS', () => {
 		const settings = { test: 'testing' };
 		const action = {
 			type: GET_USER_SETTINGS_SUCCESS,
@@ -114,49 +114,23 @@ describe('app/account/Account reducer', () => {
 	});
 
 	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_FAIL', () => {
-		const data = {
-			subscriptionData: null
-		};
 		const action = {
-			data,
 			type: 'GET_USER_SUBSCRIPTION_DATA_FAIL'
 		};
 
-		const initState = Immutable.merge(initialState, {
-			subscriptionData: data.subscriptionData
-		});
-
-		expect(AccountReducer(initState, {})).toEqual({
-			loggedIn: false,
-			userID: '',
-			user: null,
-			userSettings: null,
-			subscriptionData: null
-		});
+		expect(AccountReducer(initialState, action)).toEqual(initialState);
 	});
 
 	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_SUCCESS', () => {
-		const data = {
-			loggedIn: true,
-			subscriptionData: 'test-data'
-		};
+		const subscriptionData = { test: 'test-data' };
 		const action = {
-			data,
 			type: GET_USER_SUBSCRIPTION_DATA_SUCCESS,
-			payload: data.subscriptionData
+			payload: { subscriptionData }
 		};
 
-		const initState = Immutable.merge(initialState, {
-			loggedIn: data.loggedIn,
-			subscriptionData: action.payload
-		});
-
-		expect(AccountReducer(initState, action.payload)).toEqual({
+		expect(AccountReducer(initialState, action)).toEqual(Immutable.merge(initialState, {
 			loggedIn: true,
-			userID: '',
-			user: null,
-			userSettings: null,
-			subscriptionData: 'test-data'
-		});
+			subscriptionData
+		}));
 	});
 });
