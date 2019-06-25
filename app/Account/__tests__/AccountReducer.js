@@ -81,14 +81,18 @@ describe('app/account/Account reducer', () => {
 		}));
 	});
 
+	// With Logout we want to test whether the reducer resets the state.
+	// I would start with a bogus initState and make sure that it gets reset to initialState
 	test('reducer correctly handles LOGOUT_SUCCESS', () => {
 		const action = { type: LOGOUT_SUCCESS };
+		const initState = Immutable({ test: 'testing' });
 
-		expect(AccountReducer(undefined, action)).toEqual(initialState);
+		expect(AccountReducer(initState, action)).toEqual(initialState);
 	});
 
+	// I would put something on the user object.
 	test('reducer correctly handles GET_USER_SUCCESS', () => {
-		const user = {};
+		const user = { test: 'testing' };
 		const action = {
 			type: GET_USER_SUCCESS,
 			payload: { user }
@@ -113,12 +117,20 @@ describe('app/account/Account reducer', () => {
 		}));
 	});
 
+	// With this test we want to see that only SubscriptionData gets reset.
+	// I would start with a bogus initState and make sure that SubscriptionData gets reset.
 	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_FAIL', () => {
 		const action = {
-			type: 'GET_USER_SUBSCRIPTION_DATA_FAIL'
+			type: GET_USER_SUBSCRIPTION_DATA_FAIL,
+		};
+		const initState = {
+			test: 'testing',
+			subscriptionData: { test: 'testing' },
 		};
 
-		expect(AccountReducer(initialState, action)).toEqual(initialState);
+		expect(AccountReducer(initState, action)).toEqual(Immutable.merge(initState, {
+			subscriptionData: initialState.subscriptionData,
+		}));
 	});
 
 	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_SUCCESS', () => {
