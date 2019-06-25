@@ -85,14 +85,26 @@ describe('app/account/Account reducer', () => {
 	// I would start with a bogus initState and make sure that it gets reset to initialState
 	test('reducer correctly handles LOGOUT_SUCCESS', () => {
 		const action = { type: LOGOUT_SUCCESS };
-		const initState = Immutable({ test: 'testing' });
+		const initState = Immutable({
+			loggedIn: true,
+			userID: 'test',
+			user: { test: 'user-test' },
+			userSettings: { test: 'user-test-settings' },
+			subscriptionData: { test: 'subscription-data-test' }
+		});
 
 		expect(AccountReducer(initState, action)).toEqual(initialState);
 	});
 
 	// I would put something on the user object.
 	test('reducer correctly handles GET_USER_SUCCESS', () => {
-		const user = { test: 'testing' };
+		const user = {
+			loggedIn: false,
+			userID: 'test',
+			user: { test: 'user' },
+			userSettings: { test: 'user-settings' },
+			subscriptionData: { test: 'subscription-data' }
+		};
 		const action = {
 			type: GET_USER_SUCCESS,
 			payload: { user }
@@ -119,18 +131,19 @@ describe('app/account/Account reducer', () => {
 
 	// With this test we want to see that only SubscriptionData gets reset.
 	// I would start with a bogus initState and make sure that SubscriptionData gets reset.
-	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_FAIL', () => {
+	test.only('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_FAIL', () => {
 		const action = {
 			type: GET_USER_SUBSCRIPTION_DATA_FAIL,
 		};
 		const initState = {
-			test: 'testing',
-			subscriptionData: { test: 'testing' },
+			loggedIn: false,
+			userID: 'test',
+			user: { test: 'user' },
+			userSettings: { test: 'user-settings' },
+			subscriptionData: { test: 'subscription-data' }
 		};
 
-		expect(AccountReducer(initState, action)).toEqual(Immutable.merge(initState, {
-			subscriptionData: initialState.subscriptionData,
-		}));
+		expect(AccountReducer(initState, action)).toEqual(Immutable.merge(initialState));
 	});
 
 	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_SUCCESS', () => {
