@@ -131,19 +131,16 @@ describe('app/account/Account reducer', () => {
 
 	// With this test we want to see that only SubscriptionData gets reset.
 	// I would start with a bogus initState and make sure that SubscriptionData gets reset.
-	test.only('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_FAIL', () => {
-		const action = {
-			type: GET_USER_SUBSCRIPTION_DATA_FAIL,
-		};
-		const initState = {
-			loggedIn: false,
-			userID: 'test',
-			user: { test: 'user' },
-			userSettings: { test: 'user-settings' },
+	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_FAIL', () => {
+		const action = { type: GET_USER_SUBSCRIPTION_DATA_FAIL };
+		const initState = Immutable({
+			test: 'test-data',
 			subscriptionData: { test: 'subscription-data' }
-		};
+		});
 
-		expect(AccountReducer(initState, action)).toEqual(Immutable.merge(initialState));
+		expect(AccountReducer(initState, action)).toEqual(Immutable.merge(initState, {
+			subscriptionData: null
+		}));
 	});
 
 	test('reducer correctly handles GET_USER_SUBSCRIPTION_DATA_SUCCESS', () => {
