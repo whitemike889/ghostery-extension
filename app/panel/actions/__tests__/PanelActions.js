@@ -111,6 +111,7 @@ describe('app/panel/actions/PanelActions.js', () => {
 					break;
 				case 'account.getTheme':
 					resolve(data);
+					break;
 				default:
 					resolve();
 			}
@@ -129,7 +130,7 @@ describe('app/panel/actions/PanelActions.js', () => {
 		const data = { test: 'test-theme' };
 		const expectedPayload = { type: CLEAR_THEME };
 
-		msg.sendMessageInPromise = jest.fn(name => new Promise((resolve) => {
+		msg.sendMessageInPromise = jest.fn(() => new Promise((resolve) => {
 			resolve();
 		}));
 
