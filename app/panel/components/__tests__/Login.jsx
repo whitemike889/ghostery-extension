@@ -2,11 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router';
 import { shallow } from 'enzyme';
-import ClassNames from 'classnames';
-import RSVP from 'rsvp';
 
-import { validateEmail } from '../../utils/utils';
-import { log } from '../../../../src/utils/common';
 import Login from '../Login';
 
 describe('app/panel/components/Login Component', () => {
@@ -18,13 +14,11 @@ describe('app/panel/components/Login Component', () => {
 				loading: false,
 				emailError: false,
 				passwordError: false,
-			}
-             
+			};
+
 			const component = renderer.create(
-				shallow(<MemoryRouter>
-					<Login {...initialState} />
-				</MemoryRouter>)	
-			).toJSON(); 
+				shallow(<MemoryRouter><Login {...initialState} /></MemoryRouter>)
+			).toJSON();
 			expect(component).toMatchSnapshot();
 		});
 		test('Testing login page is rendering with true values', () => {
@@ -34,13 +28,11 @@ describe('app/panel/components/Login Component', () => {
 				loading: true,
 				emailError: true,
 				passwordError: true,
-			}
+			};
 
 			const component = renderer.create(
-				shallow(<MemoryRouter>
-					<Login {...initialState} />
-				</MemoryRouter>)	
-			).toJSON(); 
+				shallow(<MemoryRouter><Login {...initialState} /></MemoryRouter>)
+			).toJSON();
 			expect(component).toMatchSnapshot();
 		});
 	});
@@ -52,18 +44,18 @@ describe('app/panel/components/Login Component', () => {
 				loading: false,
 				emailError: false,
 				passwordError: false,
-			}
+			};
 
 			const wrapper = shallow(<Login {...initialState} />);
 
 			const email = 'test@example.com';
 			expect(wrapper.state('email')).toEqual('');
-			wrapper.find('input[type="text"]').simulate('change', {target: {name: 'email', value: email }});
+			wrapper.find('input[type="text"]').simulate('change', { target: { name: 'email', value: email } });
 			expect(wrapper.state('email')).toEqual(email);
 
 			const password = 'admin';
 			expect(wrapper.state('password')).toEqual('');
-			wrapper.find('input[type="password"]').simulate('change', {target: {name: 'password', value: password }});
+			wrapper.find('input[type="password"]').simulate('change', { target: { name: 'password', value: password } });
 			expect(wrapper.state('password')).toEqual(password);
 		});
 
@@ -74,18 +66,18 @@ describe('app/panel/components/Login Component', () => {
 				loading: true,
 				emailError: false,
 				passwordError: false,
-			}
-			
+			};
+
 			const wrapper = shallow(<Login {...initialState} />);
 
 			const email = 'test@example.com';
 			expect(wrapper.state('email')).toEqual('');
-			wrapper.find('input[type="text"]').simulate('change', {target: {name: 'email', value: email }});
+			wrapper.find('input[type="text"]').simulate('change', { target: { name: 'email', value: email } });
 			expect(wrapper.state('email')).toEqual(email);
 
 			const password = 'admin';
 			expect(wrapper.state('password')).toEqual('');
-			wrapper.find('input[type="password"]').simulate('change', {target: {name: 'password', value: password }});
+			wrapper.find('input[type="password"]').simulate('change', { target: { name: 'password', value: password } });
 			expect(wrapper.state('password')).toEqual(password);
 		});
 
@@ -96,15 +88,15 @@ describe('app/panel/components/Login Component', () => {
 				loading: false,
 				emailError: false,
 				passwordError: false,
-			}
-		
+			};
+
 			const wrapper = shallow(<Login {...initialState} />);
-			const myMock = jest.fn();	
+			const myMock = jest.fn();
 			wrapper.instance().handleSubmit = myMock;
 			wrapper.instance().forceUpdate();
 
-			wrapper.find('input[type="text"]').simulate('change', {target: {name: 'email', value: 'test@example.com'}});
-			wrapper.find('input[type="password"]').simulate('change', {target: {name: 'password', value: 'admin'}});
+			wrapper.find('input[type="text"]').simulate('change', { target: { name: 'email', value: 'test@example.com' } });
+			wrapper.find('input[type="password"]').simulate('change', { target: { name: 'password', value: 'admin' } });
 			expect(myMock.mock.calls.length).toBe(0);
 
 			wrapper.find('form').simulate('submit');
@@ -112,7 +104,6 @@ describe('app/panel/components/Login Component', () => {
 
 			expect(wrapper.state('emailError')).toBe(false);
 			expect(wrapper.state('passwordError')).toBe(false);
-			
 		});
 
 		test('login with the in-correct inputs', () => {
@@ -122,18 +113,20 @@ describe('app/panel/components/Login Component', () => {
 				loading: false,
 				emailError: false,
 				passwordError: false,
-			}
-			const wrapper = shallow( <Login {...initialState} />);
+			};
+			const wrapper = shallow(<Login {...initialState} />);
 			wrapper.find('input[type="text"]').simulate('change', {
-					target: {
-						name: 'email', 
-						value: 'test1'
-					}});
+				target: {
+					name: 'email',
+					value: 'test1'
+				}
+			});
 			wrapper.find('input[type="password"]').simulate('change', {
-					target: {
-						name: 'password', 
-						value: ' '
-					}});
+				target: {
+					name: 'password',
+					value: ' '
+				}
+			});
 
 			const preventDefault = jest.fn();
 			expect(preventDefault.mock.calls.length).toBe(0);
