@@ -14,7 +14,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0
  */
 
-import { map, object, reduce, throttle } from 'underscore';
+import {
+	map, object, reduce, throttle
+} from 'underscore';
 import bugDb from './BugDb';
 import button from './BrowserButton';
 import c2pDb from './Click2PlayDb';
@@ -23,6 +25,7 @@ import conf from './Conf';
 import foundBugs from './FoundBugs';
 import globals from './Globals';
 import latency from './Latency';
+import metrics from './Metrics';
 import panelData from './PanelData';
 import Policy, { BLOCK_REASON_SS_UNBLOCKED, BLOCK_REASON_C2P_ALLOWED_THROUGH } from './Policy';
 import PolicySmartBlock from './PolicySmartBlock';
@@ -108,6 +111,7 @@ class EventHandlers {
 		if (frameId === 0) {
 			// update reload info before creating/clearing tab info
 			if (transitionType === 'reload' && !transitionQualifiers.includes('forward_back')) {
+				metrics.handleBrokenPageTrigger(globals.BROKEN_PAGE_REFRESH);
 				tabInfo.setTabInfo(tabId, 'numOfReloads', tabInfo.getTabInfo(tabId, 'numOfReloads') + 1);
 			} else if (transitionType !== 'auto_subframe' && transitionType !== 'manual_subframe') {
 				tabInfo.setTabInfo(tabId, 'reloaded', false);
@@ -323,6 +327,7 @@ class EventHandlers {
 
 		this._eventReset(tab_id);
 	}
+
 	/**
 	 * Handler for webRequest.onBeforeRequest event
 	 * Called when a request is about to occur
@@ -375,7 +380,7 @@ class EventHandlers {
 
 		/* ** SMART BLOCKING - Privacy ** */
 		// block HTTP request on HTTPS page
-		if (this.policySmartBlock.isInsecureRequest(tab_id, page_protocol, processed.protocol, processed.host)) {
+		if (this.policySmartBlock.isInsecureRequest(tab_id, page_protocol, processed.scheme, processed.hostname)) {
 			return this._blockHelper(details, tab_id, null, null, request_id, from_redirect, true);
 		}
 
@@ -396,7 +401,7 @@ class EventHandlers {
 
 		/* ** SMART BLOCKING - Breakage ** */
 		// allow first party trackers
-		if (this.policySmartBlock.isFirstPartyRequest(tab_id, page_host, processed.host)) {
+		if (this.policySmartBlock.isFirstPartyRequest(tab_id, page_host, processed.hostname)) {
 			return { cancel: false };
 		}
 
@@ -542,7 +547,11 @@ class EventHandlers {
 	 *
 	 * @param  {Object} tab 	 Details of the tab that was created
 	 */
-	onTabCreated() {}
+	onTabCreated(tab) {
+		const { url } = tab;
+
+		metrics.handleBrokenPageTrigger(globals.BROKEN_PAGE_NEW_TAB, url);
+	}
 
 	/**
 	 * Handler for tabs.onActivated event.
@@ -658,16 +667,19 @@ class EventHandlers {
 			return {
 				redirectUrl: details.url.replace(/^http:/, 'https:')
 			};
-		} else if (details.type === 'sub_frame') {
+		}
+		if (details.type === 'sub_frame') {
 			return {
 				redirectUrl: 'about:blank'
 			};
-		} else if (details.type === 'image') {
+		}
+		if (details.type === 'image') {
 			return {
 				// send PNG (and not GIF) to avoid conflicts with Adblock Plus
 				redirectUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=='
 			};
-		} else if (details.type === 'script' && bugId) {
+		}
+		if (details.type === 'script' && bugId) {
 			let code = '';
 			if (appId === 2575) { // Hubspot
 				code = this._getHubspotFormSurrogate(details.url);
@@ -709,11 +721,11 @@ class EventHandlers {
 	 *
 	 * @private
 	 *
-	 * @param  {Object}  parsedURL
+	 * @param  {URL}  parsedURL
 	 * @return {Boolean}
 	 */
 	_isValidUrl(parsedURL) {
-		if (parsedURL.protocol.startsWith('http') && parsedURL.host.includes('.') && /[A-Za-z]/.test(parsedURL.host) && !parsedURL.path.includes('_/chrome/newtab')) {
+		if (parsedURL && parsedURL.protocol.startsWith('http') && parsedURL.isValidHost() && !parsedURL.pathname.includes('_/chrome/newtab')) {
 			return true;
 		}
 
@@ -737,7 +749,7 @@ class EventHandlers {
 		// hs_reqwest_0 - function which will be called on the client after the request
 		//
 		// hutk=941df50e9277ee76755310cd78647a08 -is user-specific (same every session)
-		const tokens = url.substr(8).split(/\/|\&|\?|\#|\=/ig);
+		const tokens = url.substr(8).split(/\/|\&|\?|\#|\=/ig); // eslint-disable-line no-useless-escape
 
 		return `${tokens[7]}({"form":{"portalId":${tokens[4]},"guid": "${tokens[5]}","cssClass":"hs-form stacked","formFieldGroups":[{"fields":[{}]}],"metaData":[]},"properties":{}})`;
 	}

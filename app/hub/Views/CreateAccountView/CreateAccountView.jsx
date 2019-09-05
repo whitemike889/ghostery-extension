@@ -33,9 +33,12 @@ const CreateAccountView = (props) => {
 		password,
 		passwordInvalidError,
 		passwordLengthError,
+		legalConsentChecked,
+		legalConsentNotCheckedError,
 		promotionsChecked,
 		handleInputChange,
-		handleCheckboxChange,
+		handleLegalConsentCheckboxChange,
+		handlePromotionsCheckboxChange,
 		handleSubmit,
 	} = props;
 
@@ -44,6 +47,9 @@ const CreateAccountView = (props) => {
 	});
 	const confirmInputClassNames = ClassNames('CreateAccountView__inputBox', {
 		error: confirmEmailError,
+	});
+	const legalConsentCheckboxInputLabelClassNames = ClassNames('CreateAccountView__inputLabel clickable', {
+		error: legalConsentNotCheckedError,
 	});
 	const passwordInputClassNames = ClassNames('CreateAccountView__inputBox', {
 		error: passwordInvalidError || passwordLengthError,
@@ -66,10 +72,11 @@ const CreateAccountView = (props) => {
 			<form onSubmit={handleSubmit}>
 				<div className="CreateAccountView--addPaddingTop row align-center-middle">
 					<div className="columns small-12 medium-5">
-						<label className="CreateAccountView__inputLabel">
+						<label htmlFor="create-account-email" className="CreateAccountView__inputLabel">
 							{t('hub_create_account_label_email')}
 						</label>
 						<input
+							id="create-account-email"
 							className={emailInputClassNames}
 							name="email"
 							type="text"
@@ -85,10 +92,11 @@ const CreateAccountView = (props) => {
 						)}
 					</div>
 					<div className="columns small-12 medium-5">
-						<label className="CreateAccountView__inputLabel">
+						<label htmlFor="create-account-confirmEmail" className="CreateAccountView__inputLabel">
 							{t('hub_create_account_label_email_confirm')}
 						</label>
 						<input
+							id="create-account-confirmEmail"
 							className={confirmInputClassNames}
 							name="confirmEmail"
 							type="text"
@@ -106,10 +114,11 @@ const CreateAccountView = (props) => {
 				</div>
 				<div className="row align-center-middle">
 					<div className="columns small-12 medium-5">
-						<label className="CreateAccountView__inputLabel">
+						<label htmlFor="create-account-firstName" className="CreateAccountView__inputLabel">
 							{t('hub_create_account_label_first_name')}
 						</label>
 						<input
+							id="create-account-firstName"
 							className="CreateAccountView__inputBox"
 							name="firstName"
 							type="text"
@@ -120,10 +129,11 @@ const CreateAccountView = (props) => {
 						/>
 					</div>
 					<div className="columns small-12 medium-5">
-						<label className="CreateAccountView__inputLabel">
+						<label htmlFor="create-account-lastName" className="CreateAccountView__inputLabel">
 							{t('hub_create_account_label_email_last_name')}
 						</label>
 						<input
+							id="create-account-lastName"
 							className="CreateAccountView__inputBox"
 							name="lastName"
 							type="text"
@@ -136,10 +146,11 @@ const CreateAccountView = (props) => {
 				</div>
 				<div className="row align-center-middle">
 					<div className="columns small-12 medium-5">
-						<label className="CreateAccountView__inputLabel">
+						<label htmlFor="create-account-password" className="CreateAccountView__inputLabel">
 							{t('hub_create_account_label_password')}
 						</label>
 						<input
+							id="create-account-password"
 							className={passwordInputClassNames}
 							name="password"
 							type="password"
@@ -160,12 +171,25 @@ const CreateAccountView = (props) => {
 						)}
 					</div>
 					<div className="columns small-12 medium-5">
-						<div className="CreateAccountView__checkboxContainer CreateAccountView--marginBottom flex-container align-middle">
+						<div className="CreateAccountView__checkboxContainer CreateAccountView--marginBottom flex-container">
+							<ToggleCheckbox
+								checked={legalConsentChecked}
+								className="ToggleCheckbox--flush-left"
+								onChange={handleLegalConsentCheckboxChange}
+							/>
+							<span
+								className={legalConsentCheckboxInputLabelClassNames}
+								onClick={handleLegalConsentCheckboxChange}
+								dangerouslySetInnerHTML={{ __html: t('create_account_form_legal_consent_checkbox_label') }}
+							/>
+						</div>
+						<div className="CreateAccountView__checkboxContainer CreateAccountView--marginBottom flex-container">
 							<ToggleCheckbox
 								checked={promotionsChecked}
-								onChange={handleCheckboxChange}
+								className="ToggleCheckbox--flush-left"
+								onChange={handlePromotionsCheckboxChange}
 							/>
-							<span className="CreateAccountView__inputLabel clickable" onClick={handleCheckboxChange}>
+							<span className="CreateAccountView__inputLabel clickable" onClick={handlePromotionsCheckboxChange}>
 								{t('hub_create_account_checkbox_promotions')}
 							</span>
 						</div>
@@ -207,12 +231,14 @@ CreateAccountView.propTypes = {
 	confirmEmailError: PropTypes.bool.isRequired,
 	firstName: PropTypes.string.isRequired,
 	lastName: PropTypes.string.isRequired,
+	legalConsentChecked: PropTypes.bool.isRequired,
 	password: PropTypes.string.isRequired,
 	passwordInvalidError: PropTypes.bool.isRequired,
 	passwordLengthError: PropTypes.bool.isRequired,
 	promotionsChecked: PropTypes.bool.isRequired,
 	handleInputChange: PropTypes.func.isRequired,
-	handleCheckboxChange: PropTypes.func.isRequired,
+	handleLegalConsentCheckboxChange: PropTypes.func.isRequired,
+	handlePromotionsCheckboxChange: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
 };
 

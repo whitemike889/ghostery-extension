@@ -39,6 +39,7 @@ class PolicySmartBlock {
 			'font',
 		];
 	}
+
 	/**
 	 * Determine if the tracker should be unblocked on a particular site to prevent site breaking.
 	 * @param  {string} appId       tracker id
@@ -72,6 +73,7 @@ class PolicySmartBlock {
 
 		return false;
 	}
+
 	/**
 	 * Determine if the tracker should be blocked on a particular site to prevent site breaking.
 	 * @param  {string} appId       tracker id
@@ -249,11 +251,13 @@ class PolicySmartBlock {
 	checkReloadThreshold(tabId) {
 		if (!this.shouldCheck(tabId)) { return false; }
 
-		const THRESHHOLD = 30000; // 30 seconds
+		// Note that this threshold is different from the broken page ping threshold in Metrics, which is 60 seconds
+		// see GH-1797 for more details
+		const SMART_BLOCK_BEHAVIOR_THRESHOLD = 30000; // 30 seconds
 
 		return (
 			tabInfo.getTabInfoPersist(tabId, 'numOfReloads') > 1 &&
-			((Date.now() - tabInfo.getTabInfoPersist(tabId, 'firstLoadTimestamp')) < THRESHHOLD) || false
+			((Date.now() - tabInfo.getTabInfoPersist(tabId, 'firstLoadTimestamp')) < SMART_BLOCK_BEHAVIOR_THRESHOLD) || false
 		);
 	}
 

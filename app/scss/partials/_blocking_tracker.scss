@@ -27,6 +27,9 @@
 			font-weight: 400;
 			color: #4a4a4a;
 			@extend %nowrap;
+			&.is-whitelisted {
+				color: #00AEF0;
+			}
 		}
 		.trk-cliqz-stats-outer-container {
 			// prevent jitter from breaking to new line
@@ -108,6 +111,10 @@
 			margin-right: 10px;
 			overflow-y: hidden;
 			@extend %nowrap;
+			&.unknown {
+				margin: 0 10px 0 0;
+				color: #4a4a4a;
+			}
 		}
 	}
 	svg.blocking-icons {
@@ -125,6 +132,61 @@
 		.restrict-circle {
 			stroke: #9B9B9B;
 			display: block;
+		}
+	}
+
+	.unknown-svg-container {
+		position: relative;
+		top: 3px;
+		width: 42px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		&:not(.whitelisted) {
+			.cliqz-tracker-trust {
+				visibility: hidden;
+				cursor: pointer;
+				.border { stroke: #d8d8d8; }
+				.background { fill: #f7f7f7; }
+				.trust-circle { stroke: #9B9B9B; }
+			}
+
+			.cliqz-tracker-scrub {
+				pointer-events: none;
+			}
+		}
+
+		&.whitelisted {
+			flex-direction: row-reverse;
+
+			.cliqz-tracker-trust {
+				pointer-events: none;
+			}
+			.cliqz-tracker-scrub {
+				visibility: hidden;
+				pointer-events: auto;
+				cursor: pointer;
+				.border { stroke: #d8d8d8; }
+				.background { fill: #f7f7f7; }
+				.shield { stroke: #9B9B9B; }
+			}
+		}
+
+		&:hover {
+			.cliqz-tracker-trust {
+				visibility: visible;
+			}
+		}
+
+		&.whitelisted:hover {
+			.cliqz-tracker-scrub {
+				visibility: visible;
+			}
+		}
+
+		&.siteRestricted {
+			pointer-events: none;
 		}
 	}
 }
@@ -166,4 +228,8 @@ svg.blocking-icons {
 		stroke-width: 1.5px;
 		stroke-linecap: square;
 	}
+}
+
+.OtherDataPoint__svgGroup {
+	padding-top: 5px;
 }

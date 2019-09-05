@@ -15,7 +15,6 @@ import React from 'react';
 import ReactSVG from 'react-svg';
 import ClassNames from 'classnames';
 import Tooltip from './Tooltip';
-import NavButton from './BuildingBlocks/NavButton';
 import { DynamicUIPortContext } from '../contexts/DynamicUIPortContext';
 import { sendMessage } from '../utils/msg';
 import globals from '../../../src/classes/Globals';
@@ -57,6 +56,8 @@ class Summary extends React.Component {
 		this.clickTrackersBlocked = this.clickTrackersBlocked.bind(this);
 		this.clickTrackersCount = this.clickTrackersCount.bind(this);
 		this.clickUpgradeBannerOrGoldPlusIcon = this.clickUpgradeBannerOrGoldPlusIcon.bind(this);
+		this.showRewardsListView = this.showRewardsListView.bind(this);
+		this.showStatsView = this.showStatsView.bind(this);
 		this.toggleExpert = this.toggleExpert.bind(this);
 		this.handlePortMessage = this.handlePortMessage.bind(this);
 
@@ -120,15 +121,13 @@ class Summary extends React.Component {
 	 * @param  {Object} data Properties of the click and resulting filter
 	 */
 	clickDonut(data) {
-		if (!this.props.is_expert) {
-			this.toggleExpert();
-		}
+		if (!this.props.is_expert) { this.toggleExpert(); }
 		this.props.actions.filterTrackers(data);
 	}
 
 	/**
 	 * Handles clicking on the Pause Ghostery button.
-	 * @param  {Int} time Optional number of minutes after which Ghostery should un-pause.
+	 * @param  {number} time Optional number of minutes after which Ghostery should un-pause.
 	 */
 	clickPauseButton(time) {
 		const ghosteryPaused = this.props.paused_blocking;
@@ -220,14 +219,30 @@ class Summary extends React.Component {
 	}
 
 	/**
+	 * Show the Rewards view
+	 * Used to handle user clicking on the Rewards Navicon
+	 */
+	showRewardsListView() {
+		this.toggleExpert('rewards/list');
+	}
+
+	/**
+	 * Show the Stats view
+	 * Used to handle user clicking on the Stats Navicon
+	 */
+	showStatsView() {
+		this.props.history.push('/stats');
+	}
+
+	/**
 	 * Toggle between Simple and Detailed Views.
 	 */
-	toggleExpert() {
+	toggleExpert(subview = 'blocking') {
 		this.props.actions.toggleExpert();
 		if (this.props.is_expert) {
 			this.props.history.push('/');
 		} else {
-			this.props.history.push('/detail');
+			this.props.history.push(`/detail/${subview}`);
 		}
 	}
 
@@ -283,7 +298,7 @@ class Summary extends React.Component {
 
 		const { body } = msg;
 
-		if (body.adblock || body.antitracking) {
+		if (body.adBlock || body.antiTracking) {
 			this.props.actions.updateCliqzModuleData(body);
 		} else {
 			this.props.actions.updateSummaryData(body);
@@ -312,7 +327,7 @@ class Summary extends React.Component {
 			enable_ad_block,
 		} = this.props;
 
-		return enable_ad_block && adBlock && adBlock.totalCount || 0;
+		return enable_ad_block && adBlock && adBlock.trackerCount || 0;
 	}
 
 	_antiTrackUnsafe() {
@@ -321,17 +336,17 @@ class Summary extends React.Component {
 			enable_anti_tracking,
 		} = this.props;
 
-		return enable_anti_tracking && antiTracking && antiTracking.totalUnsafeCount || 0;
+		return enable_anti_tracking && antiTracking && antiTracking.trackerCount || 0;
+	}
+
+	_requestsModifiedCount() {
+		return this._antiTrackUnsafe() + this._adBlockBlocked();
 	}
 
 	_totalTrackersFound() {
 		const { trackerCounts } = this.props;
 
 		return (trackerCounts.allowed + trackerCounts.blocked + this._requestsModifiedCount()) || 0;
-	}
-
-	_requestsModifiedCount() {
-		return this._antiTrackUnsafe() + this._adBlockBlocked();
 	}
 
 	_sbBlocked() {
@@ -413,6 +428,8 @@ class Summary extends React.Component {
 	_renderDonut() {
 		const {
 			categories,
+			adBlock,
+			antiTracking,
 			is_expert,
 			paused_blocking,
 			sitePolicy,
@@ -422,6 +439,8 @@ class Summary extends React.Component {
 			<div className="Summary__donutContainer">
 				<DonutGraph
 					categories={categories}
+					adBlock={adBlock}
+					antiTracking={antiTracking}
 					renderRedscale={sitePolicy === BLACKLISTED}
 					renderGreyscale={paused_blocking}
 					totalCount={this._totalTrackersFound()}
@@ -485,7 +504,10 @@ class Summary extends React.Component {
 		return (
 			<div className={totalTrackersBlockedContainerClassNames} onClick={this.clickTrackersBlocked}>
 				<div className={totalTrackersBlockedClassNames}>
-					<span className="SummaryPageStat__label">{t('trackers_blocked')} </span>
+					<span className="SummaryPageStat__label">
+						{t('trackers_blocked')}
+						{' '}
+					</span>
 					<span className="SummaryPageStat__value">
 						{this._totalTrackersBlockedCount()}
 					</span>
@@ -504,7 +526,10 @@ class Summary extends React.Component {
 		return (
 			<div className="Summary__pageStatContainer">
 				<div className={totalRequestsModifiedClassNames}>
-					<span className="SummaryPageStat__label">{t('requests_modified')} </span>
+					<span className="SummaryPageStat__label">
+						{t('requests_modified')}
+						{' '}
+					</span>
 					<span className="SummaryPageStat__value">
 						{this._requestsModifiedCount()}
 					</span>
@@ -527,7 +552,10 @@ class Summary extends React.Component {
 		return (
 			<div className="Summary__pageStatContainer">
 				<div className={pageLoadTimeClassNames}>
-					<span className="SummaryPageStat__label">{t('page_load')} </span>
+					<span className="SummaryPageStat__label">
+						{t('page_load')}
+						{' '}
+					</span>
 					<span className="SummaryPageStat__value">
 						{trackerLatencyTotal ? `${trackerLatencyTotal} ${t('settings_seconds')}` : '-'}
 					</span>
@@ -656,13 +684,13 @@ class Summary extends React.Component {
 	}
 
 	/**
-	 * Render helper for the stats nav button
-	 * @return {JSX} JSX for rendering the stats nav button
+	 * Render helper for the stats navicon
+	 * @return {JSX} JSX for rendering the stats navicon
 	 */
-	_renderStatsNavButton() {
-		const summaryViewStatsButton = ClassNames(
-			'Summary__statsButton',
-			'Summary__statsButton--absolutely-positioned',
+	_renderStatsNavicon() {
+		const statsNaviconClassNames = ClassNames(
+			'Summary__statsNavicon',
+			'Summary__statsNavicon--absolutely-positioned',
 			'g-tooltip',
 			{
 				hide: this.props.is_expert,
@@ -670,9 +698,36 @@ class Summary extends React.Component {
 		);
 
 		return (
-			<div className={summaryViewStatsButton}>
-				<NavButton path="/stats" imagePath="../../app/images/panel/graph.svg" />
+			<div className={statsNaviconClassNames} onClick={this.showStatsView}>
+				<ReactSVG src="../../app/images/panel/graph.svg" />
 				<Tooltip body={t('subscription_history_stats')} position="left" />
+			</div>
+		);
+	}
+
+	/**
+	 * Render helper for the rewards navicon that displays in the simple version of the view
+	 * @return {JSX} JSX for rendering the rewards navicon
+	 */
+	_renderRewardsNavicon() {
+		const { unread_offer_ids } = this.props;
+
+		const unreadOffersAvailable = (unread_offer_ids && unread_offer_ids.length > 0) || false;
+
+		const rewardsNaviconClassNames = ClassNames(
+			'Summary__rewardsNavicon',
+			'Summary__rewardsNavicon--absolutely-positioned',
+			'g-tooltip',
+			{
+				hide: this.props.is_expert,
+			}
+		);
+
+		return (
+			<div className={rewardsNaviconClassNames} onClick={this.showRewardsListView}>
+				<ReactSVG src="../../app/images/panel/rewards-icon.svg" />
+				{unreadOffersAvailable && <ReactSVG src="../../app/images/panel/purple-star.svg" className="Summary__rewardsNavicon__star" />}
+				<Tooltip body={t('ghostery_rewards')} position="left" />
 			</div>
 		);
 	}
@@ -692,22 +747,22 @@ class Summary extends React.Component {
 
 		return (
 			<div onClick={this.clickUpgradeBannerOrGoldPlusIcon}>
-				{isPlusSubscriber &&
+				{isPlusSubscriber && (
 					<div className="Summary__subscriberBadgeContainer">
 						<div className="SubscriberBadge">
-							<ReactSVG path="/app/images/panel/gold-plus-icon.svg" className="gold-plus-icon" />
+							<ReactSVG src="/app/images/panel/gold-plus-icon.svg" className="gold-plus-icon" />
 						</div>
 					</div>
-				}
+				)}
 
-				{!isPlusSubscriber &&
-				<div className="Summary__upgradeBannerContainer">
-					<div className={upgradeBannerClassNames}>
-						<span className="UpgradeBanner__text">{t('subscription_upgrade_to')}</span>
-						<ReactSVG path="/app/images/panel/upgrade-banner-plus.svg" className="UpgradeBanner__plus" />
+				{!isPlusSubscriber && (
+					<div className="Summary__upgradeBannerContainer">
+						<div className={upgradeBannerClassNames}>
+							<span className="UpgradeBanner__text">{t('subscription_upgrade_to')}</span>
+							<ReactSVG src="/app/images/panel/upgrade-banner-plus.svg" className="UpgradeBanner__plus" />
+						</div>
 					</div>
-				</div>
-				}
+				)}
 			</div>
 		);
 	}
@@ -718,6 +773,7 @@ class Summary extends React.Component {
 	*/
 	render() {
 		const {
+			enable_offers,
 			is_expert,
 			is_expanded,
 		} = this.props;
@@ -743,7 +799,7 @@ class Summary extends React.Component {
 					{!disableBlocking && this._renderPageLoadTime()}
 				</div>
 
-				{isCondensed && disableBlocking && is_expert && (
+				{isCondensed && disableBlocking && (
 					<div className="Summary__spaceTaker" />
 				)}
 
@@ -757,7 +813,8 @@ class Summary extends React.Component {
 					{this._renderCliqzAdBlock()}
 					{this._renderCliqzSmartBlock()}
 				</div>
-				{this._renderStatsNavButton()}
+				{this._renderStatsNavicon()}
+				{enable_offers && this._renderRewardsNavicon()}
 
 				{!isCondensed && this._renderPlusUpgradeBannerOrSubscriberIcon()}
 			</div>

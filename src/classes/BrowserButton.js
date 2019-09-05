@@ -17,7 +17,7 @@ import conf from './Conf';
 import foundBugs from './FoundBugs';
 import rewards from './Rewards';
 import Policy from './Policy';
-import { getCliqzAntitrackingData, getCliqzAdblockingData } from '../utils/cliqzModulesData';
+import { getCliqzData } from '../utils/cliqzModulesData';
 import { getTab } from '../utils/utils';
 import { log } from '../utils/common';
 import globals from './Globals';
@@ -131,6 +131,7 @@ class BrowserButton {
 	 */
 	_getIconCount(tab) {
 		const tabId = tab.id;
+		const tabHostUrl = tab.pageHost;
 		let	trackerCount = '';
 		let alert = false;
 
@@ -144,20 +145,19 @@ class BrowserButton {
 			return;
 		}
 
-		getCliqzAntitrackingData(tabId).then((antitrackingData) => {
-			const { appsCount, appsAlertCount } = this._getTrackerCount(tabId);
-			const adBlockingCount = getCliqzAdblockingData(tabId).totalCount;
+		const { appsCount, appsAlertCount } = this._getTrackerCount(tabId);
+		const adBlockingCount = getCliqzData(tabId, tabHostUrl).trackerCount;
+		const antiTrackingCount = getCliqzData(tabId, tabHostUrl, true).trackerCount;
 
-			alert = (appsAlertCount > 0);
-			trackerCount = (appsCount + antitrackingData.totalUnsafeCount + adBlockingCount).toString();
+		alert = (appsAlertCount > 0);
+		trackerCount = (appsCount + antiTrackingCount + adBlockingCount).toString();
 
-			// gray-out the icon when blocking has been disabled for whatever reason
-			if (trackerCount === '') {
-				this._setIcon(false, tabId, trackerCount, alert);
-			} else {
-				this._setIcon(!globals.SESSION.paused_blocking && !this.policy.whitelisted(tab.url), tabId, trackerCount, alert);
-			}
-		});
+		// gray-out the icon when blocking has been disabled for whatever reason
+		if (trackerCount === '') {
+			this._setIcon(false, tabId, trackerCount, alert);
+		} else {
+			this._setIcon(!globals.SESSION.paused_blocking && !this.policy.checkSiteWhitelist(tab.url), tabId, trackerCount, alert);
+		}
 	}
 
 	/**

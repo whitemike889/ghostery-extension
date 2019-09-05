@@ -115,8 +115,8 @@ export function buildC2P(details, app_id) {
  * @return {string}  					url of the internal template of the blocked redirect page
  */
 export function buildRedirectC2P(requestId, redirectUrls, app_id) {
-	const host_url = processUrl(redirectUrls.url).host;
-	const redirect_url = processUrl(redirectUrls.redirectUrl).host;
+	const host_url = processUrl(redirectUrls.url).hostname;
+	const redirect_url = processUrl(redirectUrls.redirectUrl).hostname;
 	const app_name = bugDb.db.apps[app_id].name;
 
 	globals.BLOCKED_REDIRECT_DATA = {};
@@ -190,7 +190,7 @@ function _getHubspotFormSelector(url) {
 	// hs_reqwest_0 - function which will be called on the client after the request
 	//
 	// hutk=941df50e9277ee76755310cd78647a08 -is user-specific (same every session)
-	const tokens = url.substr(8).split(/\/|\&|\?|\#|\=/ig);
+	const tokens = url.substr(8).split(/\/|\&|\?|\#|\=/ig); // eslint-disable-line no-useless-escape
 	return `form[id="hsForm_${tokens[5]}"]`;
 }
 

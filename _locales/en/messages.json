@@ -32,6 +32,9 @@
 	"banner_no_such_account_message": {
 		"message": "Looks like we can't find this email and password combo. Give it another shot."
 	},
+	"banner_email_not_in_system_message": {
+		"message": "Sorry, that email isn't in our system."
+	},
 	"blacklist_error_duplicate_url": {
 		"message": "This site is already restricted."
 	},
@@ -525,6 +528,10 @@
 		"description": "as in '5 (trackers) BLOCKED'",
 		"message": "Blocked"
 	},
+	"blocking_category_whitelisted": {
+		"description": "as in '5 (trackers) WHITELISTED'",
+		"message": "Whitelisted"
+	},
 	"panel_create_account": {
 		"message": "Create Account"
 	},
@@ -673,7 +680,7 @@
 		"message": " on this page."
 	},
 	"panel_tracker_total_tooltip": {
-		"message": "Total count of trackers found, ads blocked and data points anonymized."
+		"message": "Total count of trackers found + requests modified."
 	},
 	"panel_signin_success": {
 		"message": "You are now signed in as "
@@ -717,6 +724,9 @@
 	"panel_tracker_trust_tooltip": {
 		"message": "Trust on this site"
 	},
+	"panel_tracker_scrub_tooltip": {
+		"message": "Scrub on this site"
+	},
 	"panel_detail_menu_list_title": {
 		"message": "List View"
 	},
@@ -749,9 +759,6 @@
 	},
 	"panel_detail_performance_text": {
 		"message": "Feature coming soon."
-	},
-	"panel_detail_rewards_title": {
-		"message": "Ghostery Rewards"
 	},
 	"panel_detail_rewards_coming_soon": {
 		"message": "Feature coming soon."
@@ -1381,6 +1388,9 @@
 	},
 	"hub_home_header_checkbox_label": {
 		"message": "Share additional anonymous analytics data to improve Ghostery’s performance."
+	},
+	"hub_home_header_info_opted_out": {
+		"message": "New users are opted out of participating in Ghostery Rewards and Human Web by default. You may opt in to these recommended features in custom setup or in the extension. "
 	},
 	"hub_home_header_info": {
 		"message": "New users are opted in to participating in Human Web and Ghostery Rewards. You may change these settings in custom setup or in the extension. "
@@ -2230,5 +2240,34 @@
 	},
 	"cliqz_feature_status_off": {
 		"message": "Off"
+	},
+	"create_account_form_legal_consent_checkbox_label": {
+		"message": "I accept the $LINK_TERMS_START$Terms and Conditions$LINK_END$, the $LINK_LICENSE_START$Public License Agreement$LINK_END$, and consent to data practices found in the $LINK_PRIVACY_START$Privacy Policy$LINK_END$.",
+		"placeholders": {
+			"link_end": {
+				"content": "</a>"
+			},
+			"link_license_start": {
+				"content": "<a target=\"_blank\" href=\"https://www.mozilla.org/en-US/MPL/2.0/\" rel=\"noopener noreferrer\">"
+			},
+			"link_privacy_start": {
+				"content": "<a target=\"_blank\" href=\"https://www.ghostery.com/about-ghostery/browser-extension-privacy-policy/\" rel=\"noopener noreferrer\">"
+			},
+			"link_terms_start": {
+				"content": "<a target=\"_blank\" href=\"https://www.ghostery.com/about-ghostery/ghostery-terms-and-conditions/\" rel=\"noopener noreferrer\">"
+			}
+		}
+	},
+	"ghostery_rewards": {
+		"message": "ghostery rewards"
+	},
+	"enhanced_anti_tracking": {
+		"message": "Enhanced Anti-Tracking"
+	},
+	"unknown": {
+		"message": "Unknown"
+	},
+	"unknown_description": {
+		"message": "Unknown trackers scrubbed by Anti-Tracking"
 	}
 }

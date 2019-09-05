@@ -1,3 +1,38 @@
+### GHOSTERY 8.4.2 (August 28, 2019)
+
++ Fix slow memory leak in Firefox (#434)
++ Fix error message on Forgot Password panel (#440)
++ Update Intro Hub copy for Firefox (#436)
++ Change Rewards opt-in setting for Firefox (#437)
++ Adds Cliqz anti-ad-blocker circumvention rules (#443)
++ Package build script for AMO review (#441)
++ Updated translations
+
+### GHOSTERY 8.4.1 (August 6, 2019)
+
++ Add new Unknown tracker category in detail view with anti-tracking whitelist (#417, #433)
++ Fixes broken `target=_blank` links in Opera (#426)
++ Fixes error `Uncaught TypeError: c.querySelectorAll` (#406)
++ Show ad-blocking icons in detail view tracker list (#411)
++ Add new terms and conditions acknowledgment to account creation(#414)
++ Implement new Cliqz url parser (#410)
++ Fix donut tooltip (#409)
++ Fix bug in collapsed Summary view on un-scanned pages (#404)
++ Improved broken page metrics (#418)
++ Update all project dependencies to satisfy security alerts (#405)
++ Updated translations (#402)
+
+### GHOSTERY 8.4.0 (June 26, 2019)
+
++ Add new counter for Requests Modified by Anti-Tracking (#392)
++ Show fingerprint, cookie and advertisement icons in Detail View tracker list (#394)
++ Improved Anti-Tracking integration (#377)
++ Integrate Click2Play into SmartBlocking (#388)
++ Respect pause state before displaying CMP and Rewards windows (Fixes #389)
++ Performance improvements (Fixes #12)
++ Improved Ad-Blocker filter rule injection (Fixes #381)
++ Updated translations (#397, #400)
+
 ### GHOSTERY 8.3.4 (May 8, 2019)
 
 + Fixes bug in Click2Play redirect blocking

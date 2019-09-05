@@ -17,8 +17,8 @@
 
 import c2pDb from './Click2PlayDb';
 import conf from './Conf';
-import { processUrl } from '../utils/utils';
 import globals from './Globals';
+import { processUrl } from '../utils/utils';
 
 /**
  * Enum for reasons returned by shouldBlock
@@ -46,32 +46,32 @@ class Policy {
 	 * @param  {string} url		site url
 	 * @return {boolean}
 	 */
-	getSitePolicy(url) {
-		if (this.blacklisted(url)) {
+	getSitePolicy(hostUrl, trackerUrl) {
+		if (this.blacklisted(hostUrl)) {
 			return globals.BLACKLISTED;
 		}
-		if (this.whitelisted(url)) {
+		if (this.checkSiteWhitelist(hostUrl) || this.checkCliqzModuleWhitelist(hostUrl, trackerUrl)) {
 			return globals.WHITELISTED;
 		}
 		return false;
 	}
 
 	/**
-	 * Check given url against whitelist
+	 * Check given url against site whitelist
 	 * @param  {string} url 		site url
 	 * @return {string|boolean} 	corresponding whitelist entry or false, if none
 	 */
-	whitelisted(url) {
-		if (url) {
-			url = processUrl(url).host;
-			url = url.replace(/^www\./, '');
+	checkSiteWhitelist(url) {
+		const hostUrl = processUrl(url).host;
+		if (hostUrl) {
+			const replacedUrl = hostUrl.replace(/^www\./, '');
 			const sites = conf.site_whitelist || [];
 			const num_sites = sites.length;
 
 			// TODO: speed up
 			for (let i = 0; i < num_sites; i++) {
 				// TODO match from the beginning of the string to avoid false matches (somewhere in the querystring for instance)
-				if (url === sites[i]) {
+				if (replacedUrl === sites[i]) {
 					return sites[i];
 				}
 			}
@@ -81,21 +81,45 @@ class Policy {
 	}
 
 	/**
+	 * Check given url against anti-tracking whitelist
+	 * @param  {string} url 		site url
+	 * @return {string|boolean} 	corresponding whitelist entry or false, if none
+	 */
+	checkCliqzModuleWhitelist(hostUrl, trackerUrl) {
+		let isWhitelisted = false;
+		const processedHostUrl = processUrl(hostUrl).host;
+		const processedTrackerUrl = processUrl(trackerUrl).host;
+		const cliqzModuleWhitelist = conf.cliqz_module_whitelist;
+
+		if (cliqzModuleWhitelist[processedTrackerUrl]) {
+			cliqzModuleWhitelist[processedTrackerUrl].hosts.some((host) => {
+				if (host === processedHostUrl) {
+					isWhitelisted = true;
+					return true;
+				}
+				return false;
+			});
+		}
+
+		return isWhitelisted;
+	}
+
+	/**
 	 * Check given url against blacklist
 	 * @param  {string} url 		site url
 	 * @return {string|boolean} 	corresponding blacklist entry or false, if none
 	 */
 	blacklisted(url) {
-		if (url) {
-			url = processUrl(url).host;
-			url = url.replace(/^www\./, '');
+		const hostUrl = processUrl(url).host;
+		if (hostUrl) {
+			const replacedUrl = hostUrl.replace(/^www\./, '');
 			const sites = conf.site_blacklist || [];
 			const num_sites = sites.length;
 
 			// TODO: speed up
 			for (let i = 0; i < num_sites; i++) {
 				// TODO match from the beginning of the string to avoid false matches (somewhere in the querystring for instance)
-				if (url === sites[i]) {
+				if (replacedUrl === sites[i]) {
 					return sites[i];
 				}
 			}
@@ -133,14 +157,14 @@ class Policy {
 				}
 				return { block: false, reason: BLOCK_REASON_SS_UNBLOCKED };
 			}
-			if (this.whitelisted(tab_url)) {
+			if (this.checkSiteWhitelist(tab_url)) {
 				return { block: false, reason: BLOCK_REASON_WHITELISTED };
 			}
 			return { block: !allowedOnce, reason: allowedOnce ? BLOCK_REASON_C2P_ALLOWED_ONCE : BLOCK_REASON_GLOBAL_BLOCKED };
 		}
 		// We get here when app_id is not selected for global blocking
 		if (conf.toggle_individual_trackers && conf.site_specific_blocks.hasOwnProperty(tab_host) && conf.site_specific_blocks[tab_host].includes(+app_id)) {
-			if (this.whitelisted(tab_url)) {
+			if (this.checkSiteWhitelist(tab_url)) {
 				return { block: false, reason: BLOCK_REASON_WHITELISTED };
 			}
 			return { block: !allowedOnce, reason: allowedOnce ? BLOCK_REASON_C2P_ALLOWED_ONCE : BLOCK_REASON_SS_BLOCKED };

@@ -1,8 +1,6 @@
 ## Build Files
 dist/
 build/
-web-ext-artifacts/
-*precompiled/
 licenses.json
 
 ## Node
@@ -23,6 +21,9 @@ tools/leet/*.json
 
 # Cliqz
 cliqz/
+
+# Tools
+tools/amo/*.zip
 
 ## JSDoc
 docs/

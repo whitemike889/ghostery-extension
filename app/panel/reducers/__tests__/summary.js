@@ -35,6 +35,16 @@ const initialState = Immutable({
 		blocked: 0,
 	},
 	tab_id: 0,
+	antiTracking: {
+		totalUnsafeCount: 0,
+		totalUnknownCount: 0,
+		trackerCount: 0,
+		unknownTrackerCount: 0,
+	},
+	adBlock: {
+		totalCount: 0,
+		trackerCount: 0,
+	},
 });
 
 describe('app/panel/reducers/summary.js', () => {
@@ -52,35 +62,33 @@ describe('app/panel/reducers/summary.js', () => {
 
 	test('reducer correctly handles UPDATE_CLIQZ_MODULE_DATA', () => {
 		const data = {
-			adblock: {
-				unchangedData: false,
-				changedData: true,
-				newData: true
+			adBlock: {
+				totalCount: 3,
+				trackerCount: 2,
 			},
-			antitracking: {
-				totalUnsafeCount: 3,
-				unchangedData: false,
-				changedData: true,
-				newData: true
+			antiTracking: {
+				totalUnsafeCount: 5,
+				totalUnknownCount: 3,
+				trackerCount: 1
 			}
 		};
 		const action = { data, type: UPDATE_CLIQZ_MODULE_DATA };
 		const initState = Immutable({
 			tab_id: 0,
 			adBlock: {
-				unchangedData: false,
-				changedData: false
+				totalCount: 1,
+				trackerCount: 1,
 			},
 			antiTracking: {
 				totalUnsafeCount: 1,
-				unchangedData: false,
-				changedData: false
+				totalUnknownCount: 0,
+				trackerCount: 0
 			}
 		});
 
 		const updatedState = Immutable.merge(initState, {
-			adBlock: data.adblock,
-			antiTracking: data.antitracking
+			adBlock: data.adBlock,
+			antiTracking: data.antiTracking
 		});
 
 		expect(summaryReducer(initState, action)).toEqual(updatedState);

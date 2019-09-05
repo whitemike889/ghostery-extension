@@ -12,96 +12,129 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0
  */
 
+// @namespace BackgroundUtils
+
+import { extend } from 'underscore';
 import conf from '../classes/Conf';
 import cliqz from '../classes/Cliqz';
 
 const { adblocker, antitracking } = cliqz.modules;
 
-export function getCliqzAntitrackingData(tabId) {
-	return new Promise((resolve) => {
-		if (!conf.enable_anti_tracking || !antitracking.background) {
-			resolve({
-				totalUnsafeCount: 0
-			});
-		}
+/**
+ * Get the totalUnsafeCount of trackers found by Anti-Tracking on this tabId
+ * @memberOf BackgroundUtils
+ * @param  {number} tabId
+ * @return {object}	totalUnsafeCount
+ */
+export function getCliqzData(tabId, tabHostUrl, antiTracking) {
+	let totalUnsafeCount = 0;
+	let totalUnknownCount = 0;
+	let trackerCount = 0;
+	let unknownTrackerCount = 0;
+	const unknownTrackers = [];
+	const whitelistedUrls = conf.cliqz_module_whitelist;
+	const cliqzModule = antiTracking ? antitracking : adblocker;
+	const cliqzModuleEnabled = antiTracking ? conf.enable_anti_tracking : conf.enable_ad_block;
 
-		antitracking.background.actions.aggregatedBlockingStats(tabId).then((antitrackingData) => {
-			let totalUnsafeCount = 0;
-			for (const category in antitrackingData) {
-				if (antitrackingData.hasOwnProperty(category)) {
-					for (const app in antitrackingData[category]) {
-						if (antitrackingData[category][app] === 'unsafe') {
-							totalUnsafeCount++;
-						}
-					}
-				}
-			}
-			antitrackingData.totalUnsafeCount = totalUnsafeCount;
-			resolve(antitrackingData);
-		}).catch(() => {
-			resolve({
-				totalUnsafeCount: 0
-			});
-		});
-	});
-}
-
-export function getCliqzAdblockingData(tabId) {
-	if (!conf.enable_ad_block || !adblocker.background) {
+	if (!cliqzModuleEnabled || !cliqzModule.background) {
 		return {
-			totalCount: 0
+			totalUnsafeCount,
+			totalUnknownCount,
+			trackerCount,
+			unknownTrackerCount,
+			unknownTrackers,
+			whitelistedUrls,
 		};
 	}
 
-	const adBlocking = adblocker.background.actions.getAdBlockInfoForTab(tabId);
-	return adBlocking || { totalCount: 0 };
+	// Count up number of fingerprints and cookies found
+	const { bugs, others } = cliqzModule.background.actions.getGhosteryStats(tabId);
+	const bugsValues = Object.values(bugs);
+	const othersValues = Object.values(others);
+	const getDataPoints = (tracker) => {
+		if (antiTracking) { return tracker.cookies + tracker.fingerprints; }
+		return tracker.ads;
+	};
+
+	for (const bug of bugsValues) {
+		const dataPoints = getDataPoints(bug);
+		if (dataPoints) {
+			totalUnsafeCount += dataPoints;
+			trackerCount++;
+		}
+	}
+
+	for (const other of othersValues) {
+		let whitelisted = false;
+		const dataPoints = getDataPoints(other);
+
+		other.domains.some((domain) => {
+			if (whitelistedUrls[domain]
+			&& whitelistedUrls[domain].hosts.includes(tabHostUrl)) {
+				whitelisted = true;
+				return true;
+			}
+			return false;
+		});
+
+		if (dataPoints) {
+			totalUnsafeCount += dataPoints;
+			totalUnknownCount += dataPoints;
+			trackerCount++;
+			unknownTrackerCount++;
+		}
+
+		if (dataPoints || whitelisted) {
+			const type = antiTracking ? 'antiTracking' : 'adBlock';
+			const {
+				name, domains, ads, cookies, fingerprints
+			} = other;
+
+			unknownTrackers.push({
+				name, domains, ads, cookies, fingerprints, whitelisted, type
+			});
+		}
+	}
+
+	return {
+		totalUnsafeCount,
+		totalUnknownCount,
+		trackerCount,
+		unknownTrackerCount,
+		unknownTrackers,
+		whitelistedUrls,
+	};
 }
 
 /**
- * TODO: Add a test that verifies the following structure so that we automatically know if Cliqz changes it and we need to updated it
- 	The returned object has the following structure:
-	{
-		bugs: {
-			4147: { cookies: 3, fingerprints: 4, ads: 0 },
-			another_bug_id: { cookies: 2, .....
-			....
-		},
-		others: {
-			CloudFlare: {
-				ads: 0,
-				cat: "cdn",
-				cookies: 3,
-				domains: ["cdnjs.cloudlare.com", ...],
-				fingerprints: 4,
-				name: "CloudFlare",
-				wtm: "cloudflare",
-			},
-			...
-		}
-	}
+ * Get list of matched bug_ids from Anti-Tracking and Ad-Blocking for this
+ * tab, along with list of 'other' trackers found that do not match known bug_ids.
+ * @memberOf BackgroundUtils
+ * @param  {number} 	tabId
+ * @return {object}
  */
-export function getCliqzGhosteryStats(tabId) {
-	if (!conf.enable_anti_tracking) {
-		return {
-			bugs: {},
-			others: {},
-		};
-	}
+export function getCliqzGhosteryBugs(tabId) {
+	// Merge Ad-Block stats into Anti-Track Stats
+	const antiTrackingStats = (conf.enable_anti_tracking) ? antitracking.background.actions.getGhosteryStats(tabId) : { bugs: {}, others: {} };
+	const adBlockingStats = (conf.enable_ad_block) ? adblocker.background.actions.getGhosteryStats(tabId) : { bugs: {}, others: {} };
 
-	const ghosteryStats = antitracking.background.actions.getGhosteryStats(tabId);
-	return ghosteryStats;
+	return {
+		bugs: extend({}, antiTrackingStats.bugs, adBlockingStats.bugs),
+		others: extend({}, antiTrackingStats.others, adBlockingStats.others),
+	};
 }
 
-export function sendCliqzModulesData(tabId, callback) {
-	const modules = { adblock: {}, antitracking: {} };
+/**
+ * Send `totalCount` of ads found by Ad Blocker and `totalUnsafeCount`
+ * found by Anti-Tracking
+ * @memberOf BackgroundUtils
+ * @param  {number}   	tabId
+ * @param  {Function} 	callback
+ */
+export function sendCliqzModuleCounts(tabId, tabHostUrl, callback) {
+	const modules = { adBlock: {}, antiTracking: {} };
 
-	modules.adblock = getCliqzAdblockingData(tabId);
-
-	// TODO convert to use finally to avoid duplication (does our Babel transpile it?)
-	getCliqzAntitrackingData(tabId).then((antitrackingData) => {
-		modules.antitracking = antitrackingData;
-		callback(modules);
-	}).catch(() => {
-		callback(modules);
-	});
+	modules.adBlock = getCliqzData(tabId, tabHostUrl);
+	modules.antiTracking = getCliqzData(tabId, tabHostUrl, true);
+	callback(modules);
 }

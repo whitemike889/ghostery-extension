@@ -14,7 +14,7 @@
 import React from 'react';
 import moment from 'moment/min/moment-with-locales.min';
 import StatsView from './StatsView';
-import { sendMessage, sendMessageInPromise, openSubscriptionPage } from '../utils/msg';
+import { sendMessage, sendMessageInPromise, openCheckoutPage } from '../utils/msg';
 
 /**
  * @class the parent component of Historical Stats View and Graph
@@ -25,6 +25,7 @@ class Stats extends React.Component {
 		super(props);
 		this.state = this._reset();
 	}
+
 	/**
 	 * Lifecycle event
 	 */
@@ -37,6 +38,7 @@ class Stats extends React.Component {
 		}
 		this._init();
 	}
+
 	/**
 	 * Lifecycle event
 	 */
@@ -269,13 +271,15 @@ class Stats extends React.Component {
 		// Do nothing, just close the modal
 		this.setState({ showResetModal: false });
 	}
+
 	/**
 	 * Helper function to handle clicking on the Become a Subscriber button on modal
 	 */
 	subscribe = () => {
 		sendMessage('ping', 'hist_plus_cta');
-		openSubscriptionPage();
+		openCheckoutPage();
 	}
+
 	/**
 	 * Helper function to handle clicking on Sign in link on modal
 	 */

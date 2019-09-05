@@ -11,7 +11,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0
  */
 
-import createMemoryHistory from 'history/createMemoryHistory';
+import { createMemoryHistory } from 'history';
 /**
  * @var {Object} history object to be used by React Routerfor navigation within the Ghostery panel.
  * @memberOf PanelUtils
