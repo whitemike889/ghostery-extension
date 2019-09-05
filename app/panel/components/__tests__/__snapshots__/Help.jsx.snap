@@ -1,5 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`app/panel/components/Subscription Help Component Snapshot Test with react-test-render help view should render 1`] = `
+<div
+  id="content-help"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="small-12 columns"
+    >
+      <h1>
+        panel_help_panel_header
+      </h1>
+      <div
+        className="support-section"
+      >
+        <a
+          href="#"
+          onClick={[Function]}
+        >
+          panel_help_setup
+        </a>
+      </div>
+      <div
+        className="support-section"
+      >
+        <h3>
+          panel_help_questions_header
+        </h3>
+        <a
+          href="https://www.ghostery.com/faqs/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          panel_help_faq
+        </a>
+        <a
+          href="https://www.ghostery.com/survey/in-app"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          panel_help_feedback
+        </a>
+        <a
+          href="#"
+          onClick={[Function]}
+        >
+          panel_help_support
+        </a>
+      </div>
+      <div
+        className="support-section"
+      >
+        <h3>
+          panel_help_contact_header
+        </h3>
+        <a
+          className="info"
+          href="mailto:info@ghostery.com"
+        >
+          info@ghostery.com
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`app/panel/components/Subscription Help Component Snapshot Test with react-test-render welp the help view 1`] = `
 <div
   id="content-help"

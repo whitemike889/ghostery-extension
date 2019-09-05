@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`app/panel/components/About Snapshot tests with react-test-renderer about component is rendered correctly 1`] = `
+exports[`app/panel/components/About Snapshot tests with react-test-renderer About component is rendered correctly 1`] = `
 <div
   id="content-about"
 >
