@@ -16,8 +16,6 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {
 	IMPORT_SETTINGS_DIALOG,
-	IMPORT_SETTINGS_NATIVE,
-	IMPORT_SETTINGS_FAILED,
 	EXPORT_SETTINGS,
 	SELECT_ITEM,
 	TOGGLE_CHECKBOX,
@@ -30,12 +28,9 @@ import {
 	SETTINGS_UPDATE_SEARCH_VALUE,
 	SETTINGS_SEARCH_SUBMIT,
 	SETTINGS_FILTER,
-	GET_SETTINGS_DATA,
-	DO_NOTHING
+	GET_SETTINGS_DATA
 } from '../../constants/constants';
-import bannerStatus from '../../reducers/settings';
 import * as msg from '../../utils/msg';
-import { hashCode } from '../../../../src/utils/common';
 import globals from '../../../../src/classes/Globals';
 
 import * as settingsActions from '../SettingsActions';
@@ -82,7 +77,7 @@ describe('app/panel/actions/SettingsActions.js', () => {
 		}
 	});
 
-	test('importSettingsDialog', () => {
+	test('importSettingsDialog should resolve', () => {
 		const initialState = {};
 		const store = mockStore(initialState);
 		const data = { test: 'test-data' };
