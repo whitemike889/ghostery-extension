@@ -20,7 +20,8 @@ import {
 	UPDATE_TRACKER_COUNTS,
 	UPDATE_GHOSTERY_PAUSED,
 	UPDATE_SITE_POLICY,
-	FILTER_TRACKERS
+	FILTER_TRACKERS,
+	UPDATE_SUMMARY_DATA
 } from '../../constants/constants';
 
 const middlewares = [thunk];
@@ -45,6 +46,18 @@ describe('app/panel/actions/SummaryActions.js', () => {
 		const data = testData;
 		const expectedPayload = { data, type: UPDATE_CLIQZ_MODULE_DATA };
 		store.dispatch(summaryActions.updateCliqzModuleData(data));
+
+		const actions = store.getActions();
+		expect(actions).toEqual([expectedPayload]);
+	});
+
+	test('updateSummaryData action should return correctly', () => {
+		const initialState = {};
+		const store = mockStore(initialState);
+
+		const data = { test: true };
+		const expectedPayload = { data, type: UPDATE_SUMMARY_DATA };
+		store.dispatch(summaryActions.updateSummaryData(data));
 
 		const actions = store.getActions();
 		expect(actions).toEqual([expectedPayload]);
