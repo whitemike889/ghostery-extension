@@ -1,0 +1,30 @@
+{
+  "name": "ghostery-extension-automation",
+  "version": "1.0.0",
+  "title": "Ghostery Automation",
+  "author": {
+    "name": "Ghostery, Inc",
+    "email": "info@ghostery.com",
+    "url": "https://www.ghostery.com"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "prepare": "node_modules/.bin/webdriver-manager update",
+    "update": "node_modules/.bin/webdriver-manager update",
+    "test": "protractor conf.js",
+    "flakey": "./flake conf.js"
+  },
+  "homepage": "https://www.ghostery.com/",
+  "dependencies": {
+    "chance": "^1.0.18",
+    "chromedriver": "^77.0.0",
+    "jasmine-spec-reporter": "^4.2.1",
+    "protractor": "^5.4.2",
+    "protractor-flake": "^4.0.0"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0"
+  }
+}

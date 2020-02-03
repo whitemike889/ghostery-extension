@@ -1,0 +1,9 @@
+## Node
+/node_modules
+
+#0SX
+.DS_Store
+
+## 
+specs/test*
+
