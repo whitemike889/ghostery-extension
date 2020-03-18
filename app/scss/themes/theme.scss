@@ -393,14 +393,13 @@ $tracker-list: 					#172a0b;
 	position: absolute;
 	top: 0;
 	left: 30px;
-	right: 30px;
 	bottom: 0;
-	background-color: grey;
-	opacity: .5;
+	background-color: rgba(232, 232, 232, .5);
 
 	// Target all the elements and assign them z-indexes here
 }
 
 .foreground {
 	z-index: 10;
+	opacity: 1;
 }
